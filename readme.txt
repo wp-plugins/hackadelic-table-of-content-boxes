@@ -3,7 +3,7 @@ Contributors: Hackadelic
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1805414
 Tags: content, page, Post, AJAX, shortcode
 Requires at least: 2.6
-Tested up to: 2.6.5
+Tested up to: 2.7
 Stable tag: 1.0.0
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.

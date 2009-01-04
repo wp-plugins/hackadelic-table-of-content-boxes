@@ -17,7 +17,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 1. Go to the Plugins page and activate the plugin.
 1. Activate the plug-in as usual.
-1. Copy the CSS template fragment from the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#css-setup "Hackadelic TOC Boxes") to your CSS file (either your theme’s style.css file, or, which I’d recommend, through the MyCSS plug-in), and adjust it to your liking.
+1. Copy the CSS template fragment from the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#css-setup "Hackadelic TOC Boxes") to your CSS file (either your themes style.css file, or, which I would recommend, through the MyCSS plug-in), and adjust it to your liking.
 
 == Screenshots ==
 

@@ -43,7 +43,11 @@ Easy: Add the shortcode `[toc]` to your post or page, where you want the TOC box
 
 The TOC box is displayed with default widths which depend on it's alignment. `[toc]` will consume the full post width, while `[toc class="toc-left"]` and `[toc class="toc-right"]` will adjust to the length of your headings, up to a maximum width specified with the CSS. (Look for `div.toc.toc-right` and `div.toc.toc-left`, respectively.)
 
-You may change the maximum width individually, using the style argument. Say, to have a right-aligned TOC box with a maximum width of 200 pixels, you would write `[toc class="toc-right" style="width:200px"]`.
+You may change the maximum width individually, using the style argument. Say, to have a right-aligned TOC box with a maximum width of 200 pixels, you would write `[toc class="toc-right" style="max-width:200px"]`.
+
+= I inserted the [toc] thingy, but nothing happens. What's going on? =
+
+The TOC shortcode is ignored if there are no headings on the page. To format a heading, go to the "Kitchen Sink" toolbar of the visual editor, and use the formatting drop-down box.
 
 = Why are there no options? =
 

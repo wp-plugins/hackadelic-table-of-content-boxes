@@ -37,7 +37,7 @@ You should have received a copy of the GNU General Public License along with *Ha
 
 = How do I use the plug-in? =
 
-Easy: Add the shortcode `[toc]` to your post or page, where you want the TOC box to appear. To align the TOC box to the left or right, use [toc class="toc-left"] or [toc class="toc-right"].
+Easy: Add the shortcode `[toc]` to your post or page, where you want the TOC box to appear. To align the TOC box to the left or right, use `[toc class="toc-left"]` or `[toc class="toc-right"]`.
 
 = How do I change the width of a TOC box? =
 

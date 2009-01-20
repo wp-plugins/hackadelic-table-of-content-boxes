@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.1.0rc1
+Version: 1.1.0
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic

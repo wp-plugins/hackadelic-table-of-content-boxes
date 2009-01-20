@@ -1,13 +1,12 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.0.0
+Version: 1.1.0rc1
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
 Author URI: http://hackadelic.com
 */
-
 //---------------------------------------------------------------------------------------------
 
 class HackadelicTOC
@@ -50,7 +49,7 @@ class HackadelicTOC
 
 		$n = $this->maxLevel;
 		$regex1 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
-		$regex2 = '@<h([1-'.$n.'])\s+.*?>(.+)</h\1>@i';
+		$regex2 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
 		$content = preg_replace_callback(
 			array($regex1, $regex2),
 			array(&$this, 'doHeader'),
@@ -87,6 +86,11 @@ class HackadelicTOC
 		$toc = '';
 		foreach ($this->headers as $each) {
 			extract($each);
+			//-- To handle anchors in headings, either
+			// a) separate TOC link from TOC title => will give us titles 1:1, bit not clickable
+			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"#$anchor\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
+			//-- Or b): Filter out anchor HTML => is it enough? any other elements to filter?
+			$text = preg_replace(array('@<a>(.+?)</a>@i', '@<a\s+.*?>(.+?)</a>@i'), '\1', $text);
 			$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"#$anchor\" title=\"$text\">$text</a></li>";
 		}
 
@@ -134,5 +138,4 @@ if (!is_admin()) {
 	$tocBuilder = new HackadelicTOC();
 	$tocBuilder->initialize();
 }
-
 ?>

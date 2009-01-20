@@ -23,6 +23,16 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 Screenshots are boring. See the plug-in live in action at the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic Table Of Contents Boxes"). :-) 
 
+== Change Log ==
+
+#### 1.1.0
+
+Added ability to handle headings containing hyperlinks.
+
+#### 1.0.0
+
+Initial public release
+
 == License ==
 
 This file is part of the *Hackadelic Table Of Contents Boxes* WordPress plugin.

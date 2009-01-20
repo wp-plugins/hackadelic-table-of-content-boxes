@@ -87,7 +87,7 @@ class HackadelicTOC
 		foreach ($this->headers as $each) {
 			extract($each);
 			//-- To handle anchors in headings, either
-			// a) separate TOC link from TOC title => will give us titles 1:1, bit not clickable
+			// a) separate TOC link from TOC title => will give us titles 1:1, but not clickable
 			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"#$anchor\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
 			//-- Or b): Filter out anchor HTML => is it enough? any other elements to filter?
 			$text = preg_replace(array('@<a>(.+?)</a>@i', '@<a\s+.*?>(.+?)</a>@i'), '\1', $text);

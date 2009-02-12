@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.1.0
+Version: 1.1.1
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -15,7 +15,7 @@ class HackadelicTOC
 	var $headers = array();
 	var $tocID = 0;
 
-	var $DEFAULT_HINT = 'table of contents';
+	var $DEFAULT_HINT = 'table of contents (click to expand/collapse)';
 
 	//-------------------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ class HackadelicTOC
 			'text' => $match[2],
 			'anchor' => $anchor,
 			);
-		return '<a name="'.$anchor.'"></a>'.$match[0];
+		return '<a class="toc-anchor" name="'.$anchor.'"></a>'.$match[0];
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ class HackadelicTOC
 <!-- Hackadelic Table Of Contents, http://hackadelic.com -->
 <script type="text/javascript">
 function toggleDisplayOf(selector, onval) {
-	q = jQuery(selector);
+	var q = jQuery(selector);
 	if (!q) return;
 	if (q.css('display') == 'none')
 		q.css('display', onval);

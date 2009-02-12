@@ -25,6 +25,11 @@ Screenshots are boring. See the plug-in live in action at the [plug-in homepage]
 
 == Change Log ==
 
+#### 1.1.1
+
+* Added the class `toc-anchor` to the named anchors generated at the headings (i.e. the link targets for the TOC links).
+* Minor bug-fixes (that nobody noticed, obviously ;-))
+
 #### 1.1.0
 
 Added ability to handle headings containing hyperlinks.

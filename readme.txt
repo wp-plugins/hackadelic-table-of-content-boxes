@@ -16,7 +16,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 #### [1.1.1](http://hackadelic.com/toc-boxes-1-1-1-released)
 
-* Added the class `toc-anchor` to the named anchors generated at the headings (i.e. the link targets for the TOC links).
+* Added the class `toc-anchor` to the named anchors generated at the headings (i.e. the link targets for the TOC links) to support their individual styling via CSS.
 * Minor bug-fixes
 
 #### [1.1.0](http://hackadelic.com/toc-boxes-1-1-support-hyperlinks-in-headings)

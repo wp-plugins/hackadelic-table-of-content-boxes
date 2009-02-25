@@ -12,6 +12,21 @@ Easy to use, freely positionable, fancy AJAX-style table of contents for WordPre
 
 Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic Table Of Contents Boxes") for in-depth information about the plug-in.
 
+### Change Log
+
+#### [1.1.1](http://hackadelic.com/toc-boxes-1-1-1-released)
+
+* Added the class `toc-anchor` to the named anchors generated at the headings (i.e. the link targets for the TOC links).
+* Minor bug-fixes
+
+#### [1.1.0](http://hackadelic.com/toc-boxes-1-1-support-hyperlinks-in-headings)
+
+Added ability to handle headings containing hyperlinks.
+
+#### [1.0.0](http://hackadelic.com/a-new-plugin-is-born-toc-boxes)
+
+Initial public release
+
 == Installation ==
 
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
@@ -22,21 +37,6 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 == Screenshots ==
 
 Screenshots are boring. See the plug-in live in action at the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic Table Of Contents Boxes"). :-) 
-
-== Change Log ==
-
-#### 1.1.1
-
-* Added the class `toc-anchor` to the named anchors generated at the headings (i.e. the link targets for the TOC links).
-* Minor bug-fixes (of glitches that nobody noticed, obviously ;-))
-
-#### 1.1.0
-
-Added ability to handle headings containing hyperlinks.
-
-#### 1.0.0
-
-Initial public release
 
 == License ==
 

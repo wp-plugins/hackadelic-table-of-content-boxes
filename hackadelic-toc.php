@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.1.1
+Version: 1.2.0
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -14,6 +14,7 @@ class HackadelicTOC
 	var $maxLevel = 4;
 	var $headers = array();
 	var $tocID = 0;
+	var $url = ''; // used during preg_replace callback
 
 	var $DEFAULT_HINT = 'table of contents (click to expand/collapse)';
 
@@ -50,12 +51,30 @@ class HackadelicTOC
 		$n = $this->maxLevel;
 		$regex1 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
 		$regex2 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
-		$content = preg_replace_callback(
-			array($regex1, $regex2),
-			array(&$this, 'doHeader'),
-			$content);
-		
+
+		global $multipage, $numpages, $pages, $page;
+		$dummy = '';
+		for ($i = 1; $i <= $numpages; $i++) {
+			if ($i == $page) { $in = $content; $out =& $content; $this->url = ''; }
+			else { $in = $pages[$i-1]; $out =& $dummy; $this->url = $this->urlToPageNr($i); }
+			$out = preg_replace_callback(
+				array($regex1, $regex2),
+				array(&$this, 'doHeader'),
+				$in);
+		}
 		return $content;
+	}
+
+	//-------------------------------------------------------------------------------------
+
+	function urlToPageNr($i) {
+		$arePermalinksBasic = 
+			   '' == get_option('permalink_structure')
+			|| in_array($post->post_status, array('draft', 'pending'));
+		return ($i <= 1) ? get_permalink() : (
+			$arePermalinksBasic
+			? get_permalink() . '&amp;page=' . $i
+			: trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged') ); 
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -67,7 +86,7 @@ class HackadelicTOC
 		$this->headers[] = array(
 			'level' => $match[1],
 			'text' => $match[2],
-			'anchor' => $anchor,
+			'href' => "$this->url#$anchor",
 			);
 		return '<a class="toc-anchor" name="'.$anchor.'"></a>'.$match[0];
 	}
@@ -88,10 +107,10 @@ class HackadelicTOC
 			extract($each);
 			//-- To handle anchors in headings, either
 			// a) separate TOC link from TOC title => will give us titles 1:1, but not clickable
-			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"#$anchor\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
+			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"$href\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
 			//-- Or b): Filter out anchor HTML => is it enough? any other elements to filter?
 			$text = preg_replace(array('@<a>(.+?)</a>@i', '@<a\s+.*?>(.+?)</a>@i'), '\1', $text);
-			$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"#$anchor\" title=\"$text\">$text</a></li>";
+			$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"$href\" title=\"$text\">$text</a></li>";
 		}
 
 		global $id;

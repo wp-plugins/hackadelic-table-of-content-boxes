@@ -14,6 +14,10 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### Change Log
 
+#### [1.2.0](http://hackadelic.com/toc-boxes-1-2-0-released)
+
+Adds support for multipage posts
+
 #### [1.1.1](http://hackadelic.com/toc-boxes-1-1-1-released)
 
 * Added the class `toc-anchor` to the named anchors generated at the headings (i.e. the link targets for the TOC links) to support their individual styling via CSS.

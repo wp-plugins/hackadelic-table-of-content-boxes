@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: content, page, Post, AJAX, shortcode
 Requires at least: 2.6
 Tested up to: 2.7
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 
@@ -14,7 +14,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### Change Log
 
-#### [1.2.0](http://hackadelic.com/toc-boxes-1-2-0-released)
+#### [1.2.0](http://hackadelic.com/toc-boxes-1-2-with-multipage-support-released)
 
 Adds support for multipage posts
 

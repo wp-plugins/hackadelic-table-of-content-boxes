@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.2.0
+Version: 1.2.1
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -51,16 +51,14 @@ class HackadelicTOC
 		$n = $this->maxLevel;
 		$regex1 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
 		$regex2 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
+		$pattern = array($regex1, $regex2);
+		$callback = array(&$this, 'doHeader');
 
 		global $multipage, $numpages, $pages, $page;
-		$dummy = '';
 		for ($i = 1; $i <= $numpages; $i++) {
 			if ($i == $page) { $in = $content; $out =& $content; $this->url = ''; }
-			else { $in = $pages[$i-1]; $out =& $dummy; $this->url = $this->urlToPageNr($i); }
-			$out = preg_replace_callback(
-				array($regex1, $regex2),
-				array(&$this, 'doHeader'),
-				$in);
+			else { $in = $pages[$i-1]; unset($out); $this->url = $this->urlToPageNr($i); }
+			$out = preg_replace_callback($pattern, $callback, $in);
 		}
 		return $content;
 	}
@@ -71,10 +69,15 @@ class HackadelicTOC
 		$arePermalinksBasic = 
 			   '' == get_option('permalink_structure')
 			|| in_array($post->post_status, array('draft', 'pending'));
-		return ($i <= 1) ? get_permalink() : (
+		$url = ($i <= 1) ? get_permalink() : (
 			$arePermalinksBasic
 			? get_permalink() . '&amp;page=' . $i
-			: trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged') ); 
+			: trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged') );
+		//BEGIN workaround for conflict with plugin "Nofollow Reciprocity"
+		$home = get_option( 'home' ); if (!$home) $home != get_option( 'siteurl' );
+		$url = preg_replace( "@^$home@", '', $url);
+		//END workaround for conflict with plugin "Nofollow Reciprocity"
+		return $url;
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -99,7 +102,7 @@ class HackadelicTOC
 		extract(shortcode_atts(array(
 			'class' => '',
 			'style' => '',
-			'hint' =>$this->DEFAULT_HINT,
+			'hint' => $this->DEFAULT_HINT,
 			), $atts ));
 
 		$toc = '';

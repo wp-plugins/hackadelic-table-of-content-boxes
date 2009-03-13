@@ -14,9 +14,18 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### Change Log
 
+#### [1.3.0](http://hackadelic.com/toc-boxes-1-3-with-auto-insertion-released)
+
+* Adds several settings, and the option to auto-insert TOC at a default position, if not explicitly added by shortcode.
+* A new shortcode form. *[toc auto=off]*, was added to provide for suppressing the automatic shortcode insertion for individual posts and pages when auto-insertion is enabled globally. Other shortcode parameters are ignored in this form.
+
+#### [1.2.1](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity)
+
+Resolves a conflict with the plugin [Nofollow Reciprocity](http://wordpress.org/extend/plugins/nofollow-reciprocity/) which totally messes up multipage TOCs.
+
 #### [1.2.0](http://hackadelic.com/toc-boxes-1-2-with-multipage-support-released)
 
-Adds support for multipage posts
+Adds support for multipage posts.
 
 #### [1.1.1](http://hackadelic.com/toc-boxes-1-1-1-released)
 

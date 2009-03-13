@@ -7,7 +7,6 @@ Description: Easy to use, freely positionable, fancy AJAX-style table of content
 Author: Hackadelic
 Author URI: http://hackadelic.com
 */
-//---------------------------------------------------------------------------------------------
 
 class HackadelicTOC
 {

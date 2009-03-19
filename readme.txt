@@ -16,8 +16,9 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 #### [1.3.0](http://hackadelic.com/toc-boxes-1-3-with-auto-insertion-released)
 
-* Adds several settings, and the option to auto-insert TOC at a default position, if not explicitly added by shortcode.
+* Added the option to auto-insert TOC at a default position, if not explicitly added by shortcode.
 * A new shortcode form. *[toc auto=off]*, was added to provide for suppressing the automatic shortcode insertion for individual posts and pages when auto-insertion is enabled globally. Other shortcode parameters are ignored in this form.
+* Default shortcode parameter values (used implicitly when a paramter is not supplied) can now be configured view plugin settings.
 
 #### [1.2.1](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity)
 
@@ -77,9 +78,9 @@ You may change the maximum width individually, using the style argument. Say, to
 
 The TOC shortcode is ignored if there are no headings on the page. To format a heading, go to the "Kitchen Sink" toolbar of the visual editor, and use the formatting drop-down box.
 
-= Why are there no options? =
+= Can I use it on multipage posts? =
 
-Most customization is related to CSS anyway. However, I plan to add some options in future versions.
+Yes, since version 1.2.
 
 = I love your work, are you available for hire? =
 

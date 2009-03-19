@@ -1,31 +1,88 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.2.1
+Version: 1.3.0a
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
 Author URI: http://hackadelic.com
 */
-//---------------------------------------------------------------------------------------------
+// ===========================================================================
+// Foundation
+// ===========================================================================
 
-class HackadelicTOC
+class HackadelicTOCContext
 {
+	function CTXID() { return get_class($this); }
+
+	// I18N -------------------------------------------------------------------------------
+
+	function t($s) { return __($s, $this->CTXID());	}
+	function e($s) { _e($s, $this->CTXID());	}
+
+	// Option Access ----------------------------------------------------------------------
+
+	function fullname($name) {
+		return $this->CTXID() . '__' . $name;
+	}
+	function load_option(&$option, $name, $eval=null) {
+		$name = $this->fullname($name);
+		$value = get_option($name);
+		if ($value == null) return false;
+		$option = ($eval == null) ? $value : call_user_func($eval, $value);
+		return true;
+	}
+	function save_option(&$option, $name) {
+		$name = $this->fullname($name);
+		update_option($name, $option);
+	}
+	function erase_option(&$option, $name) {
+		$name = $this->fullname($name);
+		delete_option($name);
+		$option = null;
+	}
+}
+
+// ===========================================================================
+// Main
+// ===========================================================================
+
+class HackadelicTOC extends HackadelicTOCContext
+{
+	var $MAX_LEVEL = 4;
+	var $DEFAULT_CLASS = '';
+	var $DEFAULT_STYLE = '';
+	var $DEFAULT_HINT = 'table of contents (click to expand/collapse)';
+	var $AUTO_INSERT = '';
+
+	//-------------------------------------------------------------------------------------
+
 	var $maxLevel = 4;
 	var $headers = array();
 	var $tocID = 0;
 	var $url = ''; // used during preg_replace callback
 
-	var $DEFAULT_HINT = 'table of contents (click to expand/collapse)';
-
 	//-------------------------------------------------------------------------------------
 
-	function initialize() {
-		add_shortcode('toc_usage', array(&$this, 'doTOCUsageShortcode'));
-		add_action('wp_print_scripts', array(&$this, 'enqueueScripts'));
-		add_filter('the_content', array(&$this, 'collectTOC'));
-		add_shortcode('toc', array(&$this, 'doTOCShortcode'));
-		add_action('wp_footer', array(&$this, 'doEpilogue'));
+	function HackadelicTOC() {
+	//function initialize() {
+		$this->load_option($this->MAX_LEVEL, 'MAX_LEVEL', intval);
+		$this->load_option($this->DEFAULT_CLASS, 'DEFAULT_CLASS');
+		$this->load_option($this->DEFAULT_STYLE, 'DEFAULT_STYLE');
+		$this->load_option($this->DEFAULT_HINT, 'DEFAULT_HINT');
+		$this->load_option($this->AUTO_INSERT, 'AUTO_INSERT', trim);
+
+		if (is_admin()) {
+			add_action('admin_menu', array(&$this, 'addAdminMenu'));
+		}
+		else {
+			add_shortcode('toc_usage', array(&$this, 'doTOCUsageShortcode'));
+			add_action('wp_print_scripts', array(&$this, 'enqueueScripts'));
+			add_filter('the_content', array(&$this, 'collectTOC'));
+			add_shortcode('toc', array(&$this, 'doTOCShortcode'));
+			if ($this->AUTO_INSERT) add_filter('the_content', array(&$this, 'autoInsertTOC'), 12);
+			add_action('wp_footer', array(&$this, 'doEpilogue'));
+		}
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -42,13 +99,24 @@ class HackadelicTOC
 
 	//-------------------------------------------------------------------------------------
 
+	function autoInsertTOC($content) {
+		if ($this->shortcodeWasHere) return $content;
+		$toc = $this->insertTOC($this->DEFAULT_CLASS, $this->DEFAULT_STYLE, $this->DEFAULT_HINT);
+		if ($this->AUTO_INSERT == 'before') return $toc . $content;
+		if ($this->AUTO_INSERT == 'after') return $content . $toc;
+		return $content;
+	}
+
+	//-------------------------------------------------------------------------------------
+
 	function collectTOC($content) {
 		$this->headers = array();
 		$this->tocID = 0;
+		$this->shortcodeWasHere = false;
 
 		if ( !is_single() && !is_page() ) return $content;
 
-		$n = $this->maxLevel;
+		$n = $this->MAX_LEVEL;
 		$regex1 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
 		$regex2 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
 		$pattern = array($regex1, $regex2);
@@ -97,14 +165,21 @@ class HackadelicTOC
 	//-------------------------------------------------------------------------------------
 
 	function doTOCShortcode($atts) {
-		if (!$this->headers) return '';
+		$this->shortcodeWasHere = true;
 
 		extract(shortcode_atts(array(
-			'class' => '',
-			'style' => '',
+			'class' => $this->DEFAULT_CLASS,
+			'style' => $this->DEFAULT_STYLE,
 			'hint' => $this->DEFAULT_HINT,
+			'auto' => '',
 			), $atts ));
 
+		//$auto = strtolower($auto);
+		return $auto == 'off' ? '' : $this->insertTOC($class, $style, $hint);
+	}
+
+	function insertTOC($class, $style, $hint) {
+		if (!$this->headers) return '';
 		$toc = '';
 		foreach ($this->headers as $each) {
 			extract($each);
@@ -152,12 +227,25 @@ function toggleDisplayOf(selector, onval) {
 </script>
 <?php
 	}
+
+	//=====================================================================================
+	// ADMIN
+	//=====================================================================================
+
+	function addAdminMenu() {
+		$title = 'Hackadelic TOC';
+		add_options_page($title, $title, 10, __FILE__, array(&$this, 'displayOptionsPage'));
+	}
+
+	//-------------------------------------------------------------------------------------
+
+	function displayOptionsPage() {
+		include 'hackadelic-toc-settings.php';
+	}
 }
 
 //---------------------------------------------------------------------------------------------
 
-if (!is_admin()) {
-	$tocBuilder = new HackadelicTOC();
-	$tocBuilder->initialize();
-}
+new HackadelicTOC();
+
 ?>

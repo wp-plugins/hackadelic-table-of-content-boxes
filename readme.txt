@@ -17,8 +17,11 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 #### [1.3.0](http://hackadelic.com/toc-boxes-1-3-with-auto-insertion-released)
 
 * Added the option to auto-insert TOC at a default position, if not explicitly added by shortcode.
-* A new shortcode form. *[toc auto=off]*, was added to provide for suppressing the automatic shortcode insertion for individual posts and pages when auto-insertion is enabled globally. Other shortcode parameters are ignored in this form.
-* Default shortcode parameter values (used implicitly when a paramter is not supplied) can now be configured view plugin settings.
+* A new shortcode form, *[toc auto=off]*, was added to provide for suppressing the automatic shortcode insertion for individual posts and pages when auto-insertion is enabled globally. Other shortcode parameters are ignored in this form.
+* A new shortcode paramter, *title*, is available to specify the TOC box header text.
+* Default shortcode parameter values, can now be configured view plugin settings. They are used implicitly when a shortcode parameter is omitted.
+* New (pretty) naming scheme for heading anchors. Heading anchor names are derived from a sanitized form of the corresponding heading now, resulting into better readability and better SEO. Thanks to [an idea of johnbillion](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity#comment-656).
+* Several bug fixes and improvements.
 
 #### [1.2.1](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity)
 

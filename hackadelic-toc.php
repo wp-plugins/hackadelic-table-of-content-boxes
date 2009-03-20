@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.3.0a
+Version: 1.5.0
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -49,15 +49,27 @@ class HackadelicTOCContext
 
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $MAX_LEVEL = 4;
-	var $DEFAULT_CLASS = '';
-	var $DEFAULT_STYLE = '';
-	var $DEFAULT_HINT = 'table of contents (click to expand/collapse)';
-	var $AUTO_INSERT = '';
+	var $VERSION = '1.5.0';
 
 	//-------------------------------------------------------------------------------------
+	// Options:
 
-	var $maxLevel = 4;
+	var $MAX_LEVEL = 4;
+	var $REL_ATTR = 'bookmark nofollow';
+	var $BCOMPAT_ANCHORS = 'on';
+
+	var $DEF_TITLE = '&nabla; In this writing:';
+	var $DEF_CLASS = '';
+	var $DEF_STYLE = '';
+	var $DEF_HINT = 'table of contents (click to expand/collapse)';
+
+	var $AUTO_INSERT = '';
+	var $AUTO_CLASS = ''; // used with AUTO_INSERT
+	var $AUTO_STYLE = ''; // used with AUTO_INSERT
+
+	//-------------------------------------------------------------------------------------
+	// State & instance variables:
+
 	var $headers = array();
 	var $tocID = 0;
 	var $url = ''; // used during preg_replace callback
@@ -65,12 +77,18 @@ class HackadelicTOC extends HackadelicTOCContext
 	//-------------------------------------------------------------------------------------
 
 	function HackadelicTOC() {
-	//function initialize() {
-		$this->load_option($this->MAX_LEVEL, 'MAX_LEVEL', intval);
-		$this->load_option($this->DEFAULT_CLASS, 'DEFAULT_CLASS');
-		$this->load_option($this->DEFAULT_STYLE, 'DEFAULT_STYLE');
-		$this->load_option($this->DEFAULT_HINT, 'DEFAULT_HINT');
-		$this->load_option($this->AUTO_INSERT, 'AUTO_INSERT', trim);
+		$this->load_option($this->MAX_LEVEL, 'MAX_LEVEL', 'intval');
+		$this->load_option($this->REL_ATTR, 'REL_ATTR', 'trim');
+		$this->load_option($this->BCOMPAT_ANCHORS, 'BCOMPAT_ANCHORS', 'trim');
+
+		$this->load_option($this->DEF_TITLE, 'DEF_TITLE');
+		$this->load_option($this->DEF_CLASS, 'DEF_CLASS', 'trim');
+		$this->load_option($this->DEF_STYLE, 'DEF_STYLE', 'trim');
+		$this->load_option($this->DEF_HINT, 'DEF_HINT');
+
+		$this->load_option($this->AUTO_INSERT, 'AUTO_INSERT', 'trim');
+		$this->load_option($this->AUTO_CLASS, 'AUTO_CLASS', 'trim');
+		$this->load_option($this->AUTO_STYLE, 'AUTO_STYLE', 'trim');
 
 		if (is_admin()) {
 			add_action('admin_menu', array(&$this, 'addAdminMenu'));
@@ -88,7 +106,14 @@ class HackadelicTOC extends HackadelicTOCContext
 	//-------------------------------------------------------------------------------------
 
 	function doTOCUsageShortcode($atts, $content=null) {
-		return '<p><code>[toc hint="<em>hover hint</em>" class="<em>extra CSS class</em>" style="<em>inline CSS style</em>"]</code></p>';
+		return '
+<h5>Normal usage (all parameters are optional):</h5>
+<pre class="syntax-highlight:html">
+[toc title="TOC box title" hint="hover hint"
+     class="extra CSS class" style="inline CSS style"]
+</pre>
+<h5>Suppressing auto-insertion:</h5>
+<pre class="syntax-highlight:html">[toc auto=off]</pre>';
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -101,10 +126,19 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function autoInsertTOC($content) {
 		if ($this->shortcodeWasHere) return $content;
-		$toc = $this->insertTOC($this->DEFAULT_CLASS, $this->DEFAULT_STYLE, $this->DEFAULT_HINT);
-		if ($this->AUTO_INSERT == 'before') return $toc . $content;
-		if ($this->AUTO_INSERT == 'after') return $content . $toc;
+		$this->setVar($class, $this->AUTO_CLASS, $this->DEF_CLASS);
+		$this->setVar($style, $this->AUTO_STYLE, $this->DEF_STYLE);
+		$toc = $this->insertTOC($class, $style, $this->DEF_HINT, $this->DEF_TITLE);
+		if ($this->AUTO_INSERT == '@start') return $toc . $content;
+		if ($this->AUTO_INSERT == '@end') return $content . $toc;
+		if ($this->AUTO_INSERT == '@start+end') return $toc . $content . $toc;
 		return $content;
+	}
+
+	//-------------------------------------------------------------------------------------
+
+	function setVar(&$var, $mainVal, $auxVal) {
+		$var = $mainVal ? $mainVal : $auxVal;
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -117,8 +151,8 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ( !is_single() && !is_page() ) return $content;
 
 		$n = $this->MAX_LEVEL;
-		$regex1 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
-		$regex2 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
+		$regex1 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
+		$regex2 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
 		$pattern = array($regex1, $regex2);
 		$callback = array(&$this, 'doHeader');
 
@@ -134,6 +168,7 @@ class HackadelicTOC extends HackadelicTOCContext
 	//-------------------------------------------------------------------------------------
 
 	function urlToPageNr($i) {
+		global $post;
 		$arePermalinksBasic = 
 			   '' == get_option('permalink_structure')
 			|| in_array($post->post_status, array('draft', 'pending'));
@@ -153,34 +188,37 @@ class HackadelicTOC extends HackadelicTOCContext
 	function doHeader($match) {
 		global $id;
 		$n = count($this->headers) + 1;
-		$anchor = "toc-anchor-$id-$n";
+		$anchor0 = "toc-anchor-$id-$n";
+		$anchor = sanitize_title( $match[2], $anchor0 );
 		$this->headers[] = array(
 			'level' => $match[1],
 			'text' => $match[2],
+			'href0' => "$this->url#$anchor0",
 			'href' => "$this->url#$anchor",
 			);
-		return '<a class="toc-anchor" name="'.$anchor.'"></a>'.$match[0];
+		$result = '<a class="toc-anchor" name="'.$anchor.'"></a>';
+		if ($this->BCOMPAT_ANCHORS == 'on') $result .= '<a class="toc-anchor" name="'.$anchor0.'"></a>';
+		return $result . $match[0];
 	}
 
 	//-------------------------------------------------------------------------------------
 
 	function doTOCShortcode($atts) {
 		$this->shortcodeWasHere = true;
-
 		extract(shortcode_atts(array(
-			'class' => $this->DEFAULT_CLASS,
-			'style' => $this->DEFAULT_STYLE,
-			'hint' => $this->DEFAULT_HINT,
+			'title' => $this->DEF_TITLE,
+			'class' => $this->DEF_CLASS,
+			'style' => $this->DEF_STYLE,
+			'hint' => $this->DEF_HINT,
 			'auto' => '',
 			), $atts ));
-
-		//$auto = strtolower($auto);
-		return $auto == 'off' ? '' : $this->insertTOC($class, $style, $hint);
+		return $auto == 'off' ? '' : $this->insertTOC($class, $style, $hint, $title);
 	}
 
-	function insertTOC($class, $style, $hint) {
+	function insertTOC($class, $style, $hint, $title) {
 		if (!$this->headers) return '';
 		$toc = '';
+		$rel = $this->REL_ATTR;
 		foreach ($this->headers as $each) {
 			extract($each);
 			//-- To handle anchors in headings, either
@@ -188,25 +226,26 @@ class HackadelicTOC extends HackadelicTOCContext
 			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"$href\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
 			//-- Or b): Filter out anchor HTML => is it enough? any other elements to filter?
 			$text = preg_replace(array('@<a>(.+?)</a>@i', '@<a\s+.*?>(.+?)</a>@i'), '\1', $text);
-			$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"$href\" title=\"$text\">$text</a></li>";
+			$toc .= "<li class=\"toc-level-$level\"><a rel=\"$rel\" href=\"$href\" title=\"$text\">$text</a></li>";
 		}
 
 		global $id;
 		$tocID = ++$this->tocID;
 		$tocID = "toc-$id-$tocID";
+		$boxID = "$tocID-box";
 
 		if ($class) $class = ' '.$class;
 		if ($style) $style = ' style="'.$style.'"';
-		$clickCode = "jQuery('#$tocID').slideToggle('fast')";
+
+		//$clickCode = "jQuery('#$tocID').slideToggle('fast')";
+		$clickCode = "tocToggle('#$tocID', '#$boxID')";
 		$titleAttr = $hint ? " title=\"$hint\"" : '';
-		$titleSpan = '';
 
-		$toc = '<div class="toc'.$class.'"'.$style.'>'
-			.'<a class="toc-header" href="javascript:;"'.$titleAttr
-			.' onclick="'.$clickCode.'">'.$titleSpan.'&nabla;</a>'
-			.'<ul id="'.$tocID.'">'.$toc.'</ul>'
-			.'</div>';
-
+		$tochdr = '<a class="toc-header" href="javascript:;"'.$titleAttr
+		        . ' onclick="'.$clickCode.'">'.$title.'</a>';
+		$toc = '<div id="'.$boxID.'" class="toc'.$class.'"'.$style.'>'.$tochdr
+		     . '<ul id="'.$tocID.'">'.$toc.'</ul>'
+			 . '</div>';
 		return $toc;
 	}
 
@@ -214,15 +253,14 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function doEpilogue() {
 ?>
-<!-- Hackadelic Table Of Contents, http://hackadelic.com -->
+<!-- Hackadelic TOC Boxes <?php $this->VERSION ?>, http://hackadelic.com -->
 <script type="text/javascript">
-function toggleDisplayOf(selector, onval) {
-	var q = jQuery(selector);
+function tocToggle(toc, box) {
+	var q = jQuery(toc);
 	if (!q) return;
-	if (q.css('display') == 'none')
-		q.css('display', onval);
-	else
-		q.css('display', 'none');
+	q.slideToggle('fast', function() {
+		jQuery(box).toggleClass('toc-collapsed', q.css('display') == 'none');
+	});
 }
 </script>
 <?php

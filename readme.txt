@@ -23,6 +23,8 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 * New (pretty) naming scheme for heading anchors. Heading anchor names are derived from a sanitized form of the corresponding heading now, resulting into better readability and better SEO. Thanks to [an idea of johnbillion](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity#comment-656).
 * Several bug fixes and improvements.
 
+**Please check if your CSS styling needs an update, [according to the updated CSS template on the plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#installation"Hackadelic Table Of Contents Boxes - Installation").**
+
 #### [1.2.1](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity)
 
 Resolves a conflict with the plugin [Nofollow Reciprocity](http://wordpress.org/extend/plugins/nofollow-reciprocity/) which totally messes up multipage TOCs.

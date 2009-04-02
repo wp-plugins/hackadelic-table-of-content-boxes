@@ -14,6 +14,11 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### Change Log
 
+#### [1.5.1](http://hackadelic.com/toc-boxes-151-release)
+
+* Fixes a bug with auto-insertion, [reported by DavyB](http://hackadelic.com/solutions/wordpress/toc-boxes#comment-893)
+* Fixes a bug with TOC's on multi-page entries when the blog does not reside at top-level URL's. [Reported by Aleisha](http://hackadelic.com/toc-boxes-1-5-with-auto-insertion/comment-page-1#comment-841).
+
 #### [1.5.0 "Warp 3" Release](http://hackadelic.com/toc-boxes-1-5-major-release "TOC Boxes 1.5 release announcement")
 
 * Added the option to auto-insert TOC at a default position, if not explicitly added by shortcode.

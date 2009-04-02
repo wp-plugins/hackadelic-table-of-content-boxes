@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.5.0
+Version: 1.5.1
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -49,7 +49,7 @@ class HackadelicTOCContext
 
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.5.0';
+	var $VERSION = '1.5.1';
 
 	//-------------------------------------------------------------------------------------
 	// Options:
@@ -58,7 +58,7 @@ class HackadelicTOC extends HackadelicTOCContext
 	var $REL_ATTR = 'bookmark nofollow';
 	var $BCOMPAT_ANCHORS = 'on';
 
-	var $DEF_TITLE = '&nabla; In this writing:';
+	var $DEF_TITLE = /*'&nabla; '.*/'In this writing:';
 	var $DEF_CLASS = '';
 	var $DEF_STYLE = '';
 	var $DEF_HINT = 'table of contents (click to expand/collapse)';
@@ -128,11 +128,17 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ($this->shortcodeWasHere) return $content;
 		$this->setVar($class, $this->AUTO_CLASS, $this->DEF_CLASS);
 		$this->setVar($style, $this->AUTO_STYLE, $this->DEF_STYLE);
-		$toc = $this->insertTOC($class, $style, $this->DEF_HINT, $this->DEF_TITLE);
+		$toc = $this->renderAutoTOC($class, $style);
 		if ($this->AUTO_INSERT == '@start') return $toc . $content;
 		if ($this->AUTO_INSERT == '@end') return $content . $toc;
-		if ($this->AUTO_INSERT == '@start+end') return $toc . $content . $toc;
+		if ($this->AUTO_INSERT == '@start+end') return $toc . $content . $this->renderAutoTOC($class, $style);
 		return $content;
+	}
+
+	//-------------------------------------------------------------------------------------
+
+	function renderAutoTOC($class, $style) {
+		return $this->renderTOC($class, $style, $this->DEF_HINT, $this->DEF_TITLE);
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -172,13 +178,13 @@ class HackadelicTOC extends HackadelicTOCContext
 		$arePermalinksBasic = 
 			   '' == get_option('permalink_structure')
 			|| in_array($post->post_status, array('draft', 'pending'));
-		$url = ($i <= 1) ? get_permalink() : (
+		$posturl = get_permalink();
+		$url = ($i <= 1) ? $posturl : (
 			$arePermalinksBasic
-			? get_permalink() . '&amp;page=' . $i
-			: trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged') );
+			? $posturl . '&amp;page=' . $i
+			: trailingslashit($posturl) . user_trailingslashit($i, 'single_paged') );
 		//BEGIN workaround for conflict with plugin "Nofollow Reciprocity"
-		$home = get_option( 'home' ); if (!$home) $home != get_option( 'siteurl' );
-		$url = preg_replace( "@^$home@", '', $url);
+		$url = preg_replace( "@.*://[^/]*@i", '', $url);
 		//END workaround for conflict with plugin "Nofollow Reciprocity"
 		return $url;
 	}
@@ -212,10 +218,10 @@ class HackadelicTOC extends HackadelicTOCContext
 			'hint' => $this->DEF_HINT,
 			'auto' => '',
 			), $atts ));
-		return $auto == 'off' ? '' : $this->insertTOC($class, $style, $hint, $title);
+		return $auto == 'off' ? '' : $this->renderTOC($class, $style, $hint, $title);
 	}
 
-	function insertTOC($class, $style, $hint, $title) {
+	function renderTOC($class, $style, $hint, $title) {
 		if (!$this->headers) return '';
 		$toc = '';
 		$rel = $this->REL_ATTR;

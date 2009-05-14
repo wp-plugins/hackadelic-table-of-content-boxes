@@ -14,6 +14,13 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### Change Log
 
+#### [1.5.2 - Artem's Rib](http://hackadelic.com/toc-boxes-152-release-artems-rib)
+
+* Fixes formatting issues with headers containing tags.
+* Fixes a TOC box entry ordering issue due to ambiguities in the PHP regular expression handling.
+
+Many thanks to Artem for contributing [the](http://wordpress.org/support/topic/268568) [patches](href="http://wordpress.org/support/topic/268259) on this.
+
 #### [1.5.1](http://hackadelic.com/toc-boxes-151-release)
 
 * Fixes a bug with auto-insertion, [reported by DavyB](http://hackadelic.com/solutions/wordpress/toc-boxes#comment-893)

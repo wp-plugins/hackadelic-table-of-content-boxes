@@ -24,7 +24,7 @@ $options = array(
 		'opval' => $this->REL_ATTR,
 		'ophlp' => 'Value of the <tt>rel</tt> attribute of links in TOC boxes. Convention is to set it to "bookmark", but other attributes can be added, too. For example, you can add "nofollow" to prevent SEO juice from spreading to secondary pages in multipage posts.' ),
 	array(
-		'section' => 'Shortcode Paramter Defaults',
+		'section' => 'Shortcode Parameter Defaults',
 		'sechelp' => 'Useful when you think you would pass the same paramter value <em>in most posts</em> anyway. For example, if most of your TOC boxes are floating to the right, you can make the default CSS class <tt>toc-right</tt>, and just use <tt>[toc]</tt> instead of <tt>[toc class=toc-right]</tt> in the posts.<br /><br /><strong>Beware though that changing the default values after you already have lots of TOC boxes in your blog is problematic, as your old TOC boxes may change appearence and/or positions. It is best to decide for a set of default values and stick to them.</strong>',
 		'optitle' => 'Default TOC Box Title',
 		'opkey' => $this->fullname('DEF_TITLE'),

@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.5.1
+Version: 1.5.2
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -157,9 +157,17 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ( !is_single() && !is_page() ) return $content;
 
 		$n = $this->MAX_LEVEL;
+		//--
+		//-- Derived from Artem's patch, see http://wordpress.org/support/topic/268259 :
+		//--
+		// Replacing of the following 3 lines,
+		/*
 		$regex1 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
 		$regex2 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
 		$pattern = array($regex1, $regex2);
+		*/
+		// With this one:
+		$pattern = '@<h([1-'.$n.'])(?:\s+.*?)?>(.+?)</h\1>@i';
 		$callback = array(&$this, 'doHeader');
 
 		global $multipage, $numpages, $pages, $page;
@@ -195,10 +203,14 @@ class HackadelicTOC extends HackadelicTOCContext
 		global $id;
 		$n = count($this->headers) + 1;
 		$anchor0 = "toc-anchor-$id-$n";
-		$anchor = sanitize_title( $match[2], $anchor0 );
+		//--
+		// strip_tags hint contributed by Artem, see http://wordpress.org/support/topic/268568
+		//--
+		$text = strip_tags($match[2]);
+		$anchor = sanitize_title( $text, $anchor0 );
 		$this->headers[] = array(
 			'level' => $match[1],
-			'text' => $match[2],
+			'text' => $text, 
 			'href0' => "$this->url#$anchor0",
 			'href' => "$this->url#$anchor",
 			);
@@ -227,11 +239,13 @@ class HackadelicTOC extends HackadelicTOCContext
 		$rel = $this->REL_ATTR;
 		foreach ($this->headers as $each) {
 			extract($each);
+/*			This whole block is superfluous, now that the text is strip_tags()'ed in collectTOC
 			//-- To handle anchors in headings, either
 			// a) separate TOC link from TOC title => will give us titles 1:1, but not clickable
 			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"$href\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
 			//-- Or b): Filter out anchor HTML => is it enough? any other elements to filter?
 			$text = preg_replace(array('@<a>(.+?)</a>@i', '@<a\s+.*?>(.+?)</a>@i'), '\1', $text);
+*/
 			$toc .= "<li class=\"toc-level-$level\"><a rel=\"$rel\" href=\"$href\" title=\"$text\">$text</a></li>";
 		}
 

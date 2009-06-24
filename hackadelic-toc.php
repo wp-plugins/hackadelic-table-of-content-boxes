@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.5.2
+Version: 1.6.0dev0
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -49,7 +49,7 @@ class HackadelicTOCContext
 
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.5.2';
+	var $VERSION = '1.6.0dev0';
 
 	//-------------------------------------------------------------------------------------
 	// Options:
@@ -62,6 +62,7 @@ class HackadelicTOC extends HackadelicTOCContext
 	var $DEF_CLASS = '';
 	var $DEF_STYLE = '';
 	var $DEF_HINT = 'table of contents (click to expand/collapse)';
+	var $DEF_ENHANCE = 'comments';
 
 	var $AUTO_INSERT = '';
 	var $AUTO_CLASS = ''; // used with AUTO_INSERT
@@ -138,7 +139,7 @@ class HackadelicTOC extends HackadelicTOCContext
 	//-------------------------------------------------------------------------------------
 
 	function renderAutoTOC($class, $style) {
-		return $this->renderTOC($class, $style, $this->DEF_HINT, $this->DEF_TITLE);
+		return $this->renderTOC($class, $style, $this->DEF_HINT, $this->DEF_TITLE, $this->DEF_ENHANCE);
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -228,12 +229,13 @@ class HackadelicTOC extends HackadelicTOCContext
 			'class' => $this->DEF_CLASS,
 			'style' => $this->DEF_STYLE,
 			'hint' => $this->DEF_HINT,
+			'enhance' => $this->DEF_ENHANCE,
 			'auto' => '',
 			), $atts ));
-		return $auto == 'off' ? '' : $this->renderTOC($class, $style, $hint, $title);
+		return $auto == 'off' ? '' : $this->renderTOC($class, $style, $hint, $title, $enhance);
 	}
 
-	function renderTOC($class, $style, $hint, $title) {
+	function renderTOC($class, $style, $hint, $title, $enhance) {
 		if (!$this->headers) return '';
 		$toc = '';
 		$rel = $this->REL_ATTR;
@@ -248,6 +250,23 @@ class HackadelicTOC extends HackadelicTOCContext
 */
 			$toc .= "<li class=\"toc-level-$level\"><a rel=\"$rel\" href=\"$href\" title=\"$text\">$text</a></li>";
 		}
+
+		//--
+		//-- derived from johnbillion's patch to include link to comments in the toc
+		//-- (see http://hackadelic.com/toc-boxes-151-release#comment-1025)
+		//--
+		//$enhancements = explode('+', $enhance); // <= possible future extensions
+		//foreach ($enhancements as $enhance):
+			if ($enhance == 'comments'):
+				global $post; $n = $post->comment_count;
+				if ( $n ): #have_comments() won't work here
+					$sComments = __( 'Comments' );
+					$toc .= '<li class="toc-level-2"><a rel="' . $rel
+						. '" href="#comments" title="' . $sComments . '">' . 
+						"$sComments ($n)</a></li>";
+				endif;
+			endif;
+		//endforeach;
 
 		global $id;
 		$tocID = ++$this->tocID;

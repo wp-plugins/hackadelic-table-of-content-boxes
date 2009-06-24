@@ -14,6 +14,10 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### Change Log
 
+### [1.6.0 - Odisey](http://hackadelic.com/toc-boxes-152-release-XXX)
+
+* TOC box now optionally includes a link to the comments section on the page. (Idea and initial code contributed by JohnBillion; see http://hackadelic.com/toc-boxes-151-release#comment-1025)
+
 #### [1.5.2 - Artem's Rib](http://hackadelic.com/toc-boxes-152-release-artems-rib)
 
 * Fixes formatting issues with headers containing tags.

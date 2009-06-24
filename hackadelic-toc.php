@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.6.0dev0
+Version: 1.6.0dev1
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -10,6 +10,8 @@ Author URI: http://hackadelic.com
 // ===========================================================================
 // Foundation
 // ===========================================================================
+
+add_action('plugins_loaded', array('HackadelicTOC', 'start'));
 
 class HackadelicTOCContext
 {
@@ -29,17 +31,17 @@ class HackadelicTOCContext
 		$name = $this->fullname($name);
 		$value = get_option($name);
 		if ($value == null) return false;
+		$oldvalue = $option;
 		$option = ($eval == null) ? $value : call_user_func($eval, $value);
-		return true;
+		return $value != $oldvalue;
 	}
 	function save_option(&$option, $name) {
 		$name = $this->fullname($name);
 		update_option($name, $option);
 	}
-	function erase_option(&$option, $name) {
+	function erase_option($name) {
 		$name = $this->fullname($name);
 		delete_option($name);
-		$option = null;
 	}
 }
 
@@ -47,16 +49,50 @@ class HackadelicTOCContext
 // Main
 // ===========================================================================
 
+//class HackadelicTOCSettings
+//{
+//	var $MAX_LEVEL = 4;
+//	var $REL_ATTR = 'bookmark nofollow';
+//	var $BCOMPAT_ANCHORS = true;
+//
+//	var $DEF_TITLE = /*'&nabla; '.*/'In this writing:';
+//	var $DEF_CLASS = '';
+//	var $DEF_STYLE = '';
+//	var $DEF_HINT = 'table of contents (click to expand/collapse)';
+//	var $DEF_ENHANCE = 'comments';
+//
+//	var $AUTO_INSERT = '';
+//	var $AUTO_CLASS = ''; // used with AUTO_INSERT
+//	var $AUTO_STYLE = ''; // used with AUTO_INSERT
+//
+//	var $INCL_COMMENTS = true;
+//
+//	function load($ctx) {
+//		$ctx->load_option($this->MAX_LEVEL, 'MAX_LEVEL', 'intval');
+//		$ctx->load_option($this->REL_ATTR, 'REL_ATTR', 'trim');
+//		$ctx->load_option($this->BCOMPAT_ANCHORS, 'BCOMPAT_ANCHORS', create_function('$s', 'return trim($s) == "on"'));
+//
+//		$ctx->load_option($this->DEF_TITLE, 'DEF_TITLE');
+//		$ctx->load_option($this->DEF_CLASS, 'DEF_CLASS', 'trim');
+//		$ctx->load_option($this->DEF_STYLE, 'DEF_STYLE', 'trim');
+//		$ctx->load_option($this->DEF_HINT, 'DEF_HINT');
+//
+//		$ctx->load_option($this->AUTO_INSERT, 'AUTO_INSERT', 'trim');
+//		$ctx->load_option($this->AUTO_CLASS, 'AUTO_CLASS', 'trim');
+//		$ctx->load_option($this->AUTO_STYLE, 'AUTO_STYLE', 'trim');
+//	}
+//}
+
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.6.0dev0';
+	var $VERSION = '1.6.0dev1';
 
 	//-------------------------------------------------------------------------------------
 	// Options:
 
 	var $MAX_LEVEL = 4;
 	var $REL_ATTR = 'bookmark nofollow';
-	var $BCOMPAT_ANCHORS = 'on';
+	var $BCOMPAT_ANCHORS = true;
 
 	var $DEF_TITLE = /*'&nabla; '.*/'In this writing:';
 	var $DEF_CLASS = '';
@@ -68,6 +104,8 @@ class HackadelicTOC extends HackadelicTOCContext
 	var $AUTO_CLASS = ''; // used with AUTO_INSERT
 	var $AUTO_STYLE = ''; // used with AUTO_INSERT
 
+	var $op; // bundled option references
+
 	//-------------------------------------------------------------------------------------
 	// State & instance variables:
 
@@ -78,18 +116,10 @@ class HackadelicTOC extends HackadelicTOCContext
 	//-------------------------------------------------------------------------------------
 
 	function HackadelicTOC() {
-		$this->load_option($this->MAX_LEVEL, 'MAX_LEVEL', 'intval');
-		$this->load_option($this->REL_ATTR, 'REL_ATTR', 'trim');
-		$this->load_option($this->BCOMPAT_ANCHORS, 'BCOMPAT_ANCHORS', 'trim');
+		$this->initOptionsMap();
+		$this->loadOptions();
 
-		$this->load_option($this->DEF_TITLE, 'DEF_TITLE');
-		$this->load_option($this->DEF_CLASS, 'DEF_CLASS', 'trim');
-		$this->load_option($this->DEF_STYLE, 'DEF_STYLE', 'trim');
-		$this->load_option($this->DEF_HINT, 'DEF_HINT');
-
-		$this->load_option($this->AUTO_INSERT, 'AUTO_INSERT', 'trim');
-		$this->load_option($this->AUTO_CLASS, 'AUTO_CLASS', 'trim');
-		$this->load_option($this->AUTO_STYLE, 'AUTO_STYLE', 'trim');
+		//die(print_r(compact($this->MAX_LEVEL, $this->REL_ATTR), true));
 
 		if (is_admin()) {
 			add_action('admin_menu', array(&$this, 'addAdminMenu'));
@@ -105,6 +135,20 @@ class HackadelicTOC extends HackadelicTOCContext
 	}
 
 	//-------------------------------------------------------------------------------------
+
+	function start() {
+		$me = new HackadelicTOC();
+		//NOTE: Interestingly, the following call does not work inside an instance method.
+		//      However, it works here, as this method is invoked statically.
+		register_deactivation_hook(__FILE__, array(&$me, 'uninstall'));
+	}
+
+	function uninstall() {
+		delete_option($this->CTXID());
+	}
+
+	//-------------------------------------------------------------------------------------
+	// Core:
 
 	function doTOCUsageShortcode($atts, $content=null) {
 		return '
@@ -216,7 +260,7 @@ class HackadelicTOC extends HackadelicTOCContext
 			'href' => "$this->url#$anchor",
 			);
 		$result = '<a class="toc-anchor" name="'.$anchor.'"></a>';
-		if ($this->BCOMPAT_ANCHORS == 'on') $result .= '<a class="toc-anchor" name="'.$anchor0.'"></a>';
+		if ($this->BCOMPAT_ANCHORS) $result .= '<a class="toc-anchor" name="'.$anchor0.'"></a>';
 		return $result . $match[0];
 	}
 
@@ -292,7 +336,8 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function doEpilogue() {
 ?>
-<!-- Hackadelic TOC Boxes <?php $this->VERSION ?>, http://hackadelic.com -->
+<!-- Hackadelic TOC Boxes <?php echo $this->VERSION ?>, http://hackadelic.com -->
+<span style="display:none">This site uses <a href="http://hackadelic.com/solutions/wordpress/toc-boxes">Hackadelic TOC Boxes <?php echo $this->VERSION ?></a>, a <a href="http://hackadelic.com">Hackadelic</a> PlugIn.</span>
 <script type="text/javascript">
 function tocToggle(toc, box) {
 	var q = jQuery(toc);
@@ -306,23 +351,106 @@ function tocToggle(toc, box) {
 	}
 
 	//=====================================================================================
+	// AUX
+	//=====================================================================================
+
+	function assignTo(&$var, $value) {
+		settype($value, gettype($var));
+		$var = $value;
+	}
+
+	//=====================================================================================
 	// ADMIN
 	//=====================================================================================
 
 	function addAdminMenu() {
 		$title = 'Hackadelic TOC';
-		add_options_page($title, $title, 10, __FILE__, array(&$this, 'displayOptionsPage'));
+		add_options_page($title, $title, 10, __FILE__, array(&$this, 'handleOptions'));
 	}
 
 	//-------------------------------------------------------------------------------------
 
-	function displayOptionsPage() {
+	function handleOptions() {
+		$actionURL = $_SERVER['REQUEST_URI'];
+		$context = $this->CTXID();
+		$options = $this->op;
+		$updated = false;
+		$status = '';
+		if ( $_POST['action'] == 'update' ) {
+			check_admin_referer($context);
+			//die(sprintf('<PRE>%s</PRE>', print_r($_POST, true)));
+			if (isset($_POST['submit'])):
+				foreach ($options as $key => $val):
+					$bistate = $key == 'BCOMPAT_ANCHORS';
+					if ($bistate):
+						$newval = isset($_POST[$key]);
+					else:
+						if ( !isset($_POST[$key]) ) continue;
+						$newval = trim( $_POST[$key] );
+					endif;
+					if ( $newval == $val ) continue;
+					$this->assignTo($options->$key, $newval);
+					$updated = true; $status = 'updated';
+				endforeach;
+				//die(sprintf('<PRE>%s</PRE>', print_r($options, true)));
+				if ($updated): update_option($context, $options); endif;
+			elseif (isset($_POST['reset'])):
+				//echo sprintf('<PRE>%s</PRE>', print_r($_POST, true));
+				delete_option($context);
+				$updated = true; $status = 'reset';
+			endif;
+		}
 		include 'hackadelic-toc-settings.php';
+		//echo(sprintf('<PRE>%s</PRE>', print_r($options, true)));
+	}
+
+	//-------------------------------------------------------------------------------------
+
+	function initOptionsMap() {
+		$opnames = array(
+			'MAX_LEVEL', 'REL_ATTR', 'BCOMPAT_ANCHORS',
+			'DEF_TITLE', 'DEF_CLASS', 'DEF_STYLE', 'DEF_HINT', 'DEF_ENHANCE',
+			'AUTO_INSERT', 'AUTO_CLASS', 'AUTO_STYLE',
+		);
+		$this->op = (object) array();
+		foreach ($opnames as $name)
+			$this->op->$name = &$this->$name;
+	}
+
+	function loadOptions() {
+		$context = $this->CTXID();
+		$options = $this->op;
+		$saved = get_option($context);
+		if ($saved) foreach ( (array) $options as $key => $val ) {
+			if (!isset($saved->$key)) continue;
+			$this->assignTo($options->$key, $saved->$key);
+		}
+		// Backward compatibility hack, to be removed in 
+		$this->migrateOptions($options, $context);
+	}
+
+	//-------------------------------------------------------------------------------------
+
+	function migrateOptions(&$options, $context) {
+		// Backward compatibility hack
+		$anychange = false;
+		foreach ( (array) $options as $key => $val ):
+			// 1) load options from prior version
+			$bistate = $key == 'BCOMPAT_ANCHORS';
+			$v = $bistate ? ($val ? 'on' : 'off') : (string) $val;
+			$modified = $this->load_option($v, $key, 'trim');
+			$val = $bistate ? ($v == 'on') : $v;
+			if ($modified):
+				$this->assignTo($options->$key, $val);
+				$anychange = true;
+			endif;
+			// 2) erase options from prior version
+			$this->erase_option($key);
+			//print("<p class=\"updated fade\">Option migrated $key: $v -&gt; $val; (Modified: $modified; Any change: $anychange)</p>");
+		endforeach;
+		// 3) save options in new format
+		if ($anychange) update_option($context, $options);
 	}
 }
-
-//---------------------------------------------------------------------------------------------
-
-new HackadelicTOC();
 
 ?>

@@ -2,13 +2,10 @@
 /*
 Sample usage:
 	$slugHome = $slugWP = 'myplugin';
-	$admPageTitle = 'My Plugin Settings';
 	include 'hackadelic-sliders-admx.php';
 */
 if ( !defined('ABSPATH') )
 	exit('Sorry, you are not allowed to access this page directly.');
-if ( !isset($admPageTitle) )
-	exit('Invalid operation context - $admPageTitle not set.');
 if ( !isset($slugHome) )
 	exit('Invalid operation context - $slugHome not set.');
 if ( !isset($slugWP) )
@@ -46,8 +43,8 @@ $infomercials = array(
 		'url' => 'http://hackadelic.com/feed',
 		'icon' => "http://lh4.ggpht.com/_eYaV9fZ6qRg/SYj7e2bE8DI/AAAAAAAAAGE/FoHbGZM2j3A/s800/feed.png" ),
 	array(
-		'text' => 'Order a plugin',
-		'url' => 'http://hackadelic.com/contact',
+		'text' => 'Request a plugin',
+		'url' => 'http://hackadelic.com/services',
 		'icon' => "http://lh5.ggpht.com/_eYaV9fZ6qRg/SYj7lcn3TFI/AAAAAAAAAGc/IIpGTWolB7k/s800/lightbulb.png" ),
 );
 
@@ -77,32 +74,24 @@ $infomercials = array(
 		color: #ccc
 	}
 </style>
-<div class="wrap">
-<h2><?php echo $admPageTitle ?></h2>
 
 <div class="hackadelic-adminfobar">
-<center>
-You are using a <strong>Hackadelic PlugIn</strong>
-</center>
-<hr size="0" />
-<ul>
+	<center>You are using a <strong>Hackadelic PlugIn</strong></center>
+	<hr size="0" />
+	<ul>
 <?php foreach ($infomercials as $each) : unset($hr) ; extract($each) ?>
-	<?php if ($hr) : ?><hr size="0" /><?php endif ?>
-	<li style="list-style-image:url(<?php echo $icon ?>)">
-	<a href="<?php echo $url ?>" ><?php echo $text ?></a>
-	</li>
+		<?php if ($hr) : ?><hr size="0" /><?php endif ?>
+		<li style="list-style-image:url(<?php echo $icon ?>)">
+		<a href="<?php echo $url ?>" ><?php echo $text ?></a>
+		</li>
 <?php endforeach ?>
-</ul><?php /*
-	<p><em><?php $this->e('Need an expert plugin developer?') ?>
-	 <a href="http://hackadelic.com/contact"><?php $this->e('Contact me') ?>!</a></em>
-	</p> */ ?>
-
-<hr size="0" />
-<center><small>
-<!-- Creative Commons License -->
-<a rel="nofollow" href="http://creativecommons.org/licenses/GPL/2.0/">
-<img alt="CC-GNU GPL" border="0" src="http://creativecommons.org/images/public/cc-GPL-a.png" /></a><br />
-This software is licensed under the <a href="http://creativecommons.org/licenses/GPL/2.0/">CC-GNU GPL</a> version 2.0 or later.
-<!-- /Creative Commons License -->
-</small></center>
+	</ul>
+	<hr size="0" />
+	<center><small>
+		<!-- Creative Commons License -->
+		<a rel="nofollow" href="http://creativecommons.org/licenses/GPL/2.0/">
+		<img alt="CC-GNU GPL" border="0" src="http://creativecommons.org/images/public/cc-GPL-a.png" /></a><br />
+		This software is licensed under the <a href="http://creativecommons.org/licenses/GPL/2.0/">CC-GNU GPL</a> version 2.0 or later.
+		<!-- /Creative Commons License -->
+	</small></center>
 </div>

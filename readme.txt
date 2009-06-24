@@ -3,7 +3,7 @@ Contributors: Hackadelic
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1805414
 Tags: content, page, Post, AJAX, shortcode
 Requires at least: 2.6
-Tested up to: 2.7.1
+Tested up to: 2.8.1
 Stable tag: 1.5.2
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
@@ -17,6 +17,10 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 ### [1.6.0 - Odisey](http://hackadelic.com/toc-boxes-152-release-XXX)
 
 * TOC box now optionally includes a link to the comments section on the page. (Idea and initial code contributed by JohnBillion; see http://hackadelic.com/toc-boxes-151-release#comment-1025)
+* Overhauled settings handling for **WPMU compatibility**. Old-style options are automatically migrated.
+* Settings can be reset to "factory values", removing them from the database. Useful when uninstalling the plugin.
+* Increased security.
+* Various code improvements
 
 #### [1.5.2 - Artem's Rib](http://hackadelic.com/toc-boxes-152-release-artems-rib)
 

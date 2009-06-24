@@ -4,112 +4,183 @@ if ( !defined('ABSPATH') )
 if ( !isset($this) || !is_a($this, HackadelicTOC) )
 	exit("Invalid operation context.");
 
-$options = array(
-	array(
-		'section' => 'General TOC Settings',
-		'optitle' => 'Maximum Heading Level',
-		'opstyle' => 'max-width: 5em',
-		'opkey' => $this->fullname('MAX_LEVEL'),
-		'opval' => $this->MAX_LEVEL,
-		'ophlp' => 'Maximum heading level included in TOC boxed' ),
-	array(
-		'opstyle' => 'max-width: 5em',
-		'optitle' => 'TOC Anchor Backward Compatibility',
-		'opkey' => $this->fullname('BCOMPAT_ANCHORS'),
-		'opval' => $this->BCOMPAT_ANCHORS,
-		'ophlp' => 'Whether to keep old-style anchors <u>in addition</u> to new style achnors. Required only if your blog contained explicit links to old-style TOC anchors (such as /myblog/some-post<b>#toc-17-2</b>), that would break by switching to new style anchors. To disable backward compatibility mode, set it to empty or "off".' ),
-	array(
-		'optitle' => 'TOC Link REL Attribute Value',
-		'opkey' => $this->fullname('REL_ATTR'),
-		'opval' => $this->REL_ATTR,
-		'ophlp' => 'Value of the <tt>rel</tt> attribute of links in TOC boxes. Convention is to set it to "bookmark", but other attributes can be added, too. For example, you can add "nofollow" to prevent SEO juice from spreading to secondary pages in multipage posts.' ),
-	array(
-		'section' => 'Shortcode Parameter Defaults',
-		'sechelp' => 'Useful when you think you would pass the same paramter value <em>in most posts</em> anyway. For example, if most of your TOC boxes are floating to the right, you can make the default CSS class <tt>toc-right</tt>, and just use <tt>[toc]</tt> instead of <tt>[toc class=toc-right]</tt> in the posts.<br /><br /><strong>Beware though that changing the default values after you already have lots of TOC boxes in your blog is problematic, as your old TOC boxes may change appearence and/or positions. It is best to decide for a set of default values and stick to them.</strong>',
-		'optitle' => 'Default TOC Box Title',
-		'opkey' => $this->fullname('DEF_TITLE'),
-		'opval' => htmlentities($this->DEF_TITLE),
-		'ophlp' => 'The default TOC box title when none is given via shortcode parameter.' ),
-	array(
-		'optitle' => 'Default CSS Class',
-		'opkey' => $this->fullname('DEF_CLASS'),
-		'opval' => $this->DEF_CLASS,
-		'ophlp' => 'The default CSS class when none is given via shortcode parameter.' ),
-	array(
-		'optitle' => 'Default Inline CSS Style',
-		'opkey' => $this->fullname('DEF_STYLE'),
-		'opval' => htmlentities($this->DEF_STYLE),
-		'ophlp' => 'The default inline CSS style when none is given via shortcode parameter.' ),
-	array(
-		'optitle' => 'Default Hint',
-		'opkey' => $this->fullname('DEF_HINT'),
-		'opval' => htmlentities($this->DEF_HINT),
-		'ophlp' => 'The default hint text when none is given via shortcode parameter.' ),
-	array(
-		'section' => 'Automatic Insertion Settings',
-		'optitle' => 'Automatic Insertion',
-		'opstyle' => 'max-width: 10em',
-		'opkey' => $this->fullname('AUTO_INSERT'),
-		'opval' => $this->AUTO_INSERT,
-		'ophlp' => 'Controls automatic TOC box insertion into posts and pages:<br />&nbsp;&nbsp;<tt>@start</tt> = insert BEFORE content<br />&nbsp;&nbsp;<tt>@end</tt> = insert AFTER content<br />&nbsp;&nbsp;<tt>@start+end</tt> = insert before AND after content<br />&nbsp;&nbsp;empty or anything else = do not insert automatically' ),
-	array(
-		'optitle' => 'CSS Class For Auto-Insertion',
-		'opkey' => $this->fullname('AUTO_CLASS'),
-		'opval' => $this->AUTO_CLASS,
-		'ophlp' => 'The CSS class used for automatically inserted TOC boxes.<br />If none specified, the default CSS class above will be used instead.' ),
-	array(
-		'optitle' => 'CSS Style For Auto-Insertion',
-		'opkey' => $this->fullname('AUTO_STYLE'),
-		'opval' => htmlentities($this->AUTO_STYLE),
-		'ophlp' => 'The inline CSS style used for automatically inserted TOC boxes.<br />If none specified, the default CSS style above will be used instead.' ),
-);
+$sections = array(
+	(object) array(
+		'title' =>  'General TOC Settings',
+		'help' => 'Basic settings. Contrast to other settings, these are not settable via shortcode parameters.',
+		'options' => array(
+			(object) array(
+				'title' => 'Maximum Heading Level',
+				'key' => 'MAX_LEVEL', //'val' => $this->MAX_LEVEL,
+				'style' => 'max-width: 5em',
+				'help' => 'Maximum heading level in a TOC' ),
+			(object) array(
+				'title' => 'TOC Anchor Backward Compatibility',
+				'key' => 'BCOMPAT_ANCHORS', //'val' => $this->BCOMPAT_ANCHORS,
+				'type' => 'checkbox',
+				'style' => 'max-width: 5em',
+				'text' => 'Keep old style anchors?',
+				'help' => 'Whether to keep old-style anchors <u>in addition</u> to new style achnors. Required only if your blog contained explicit links to old-style TOC anchors (such as /myblog/some-post<b>#toc-17-2</b>), that would break by switching to new style anchors.' ),
+			(object) array(
+				'title' => 'TOC Link REL Attribute Value',
+				'key' => 'REL_ATTR', //'val' => $this->REL_ATTR,
+				'help' => 'Value of the <tt>rel</tt> attribute of links in TOC boxes. Convention is to set it to "bookmark", but other attributes can be added, too. For example, you can add "nofollow" to prevent SEO juice from spreading to secondary pages in multipage posts.' ),
+		)),
+	(object) array(
+		'title' => 'Shortcode Parameter Defaults',
+		'help' => 'Useful when you think you would pass the same paramter value <em>in most cases</em> anyway. For example, if most of your TOC boxes are floating to the right, you can make the default CSS class <tt>toc-right</tt>, and just use <tt>[toc]</tt> instead of <tt>[toc class=toc-right]</tt> in the posts.<br /><br /><strong>Beware though that changing the default values after you already have lots of TOC boxes in your blog is problematic, as your old TOC boxes may change appearence and/or positions. It is best to decide for a set of default values and stick to them.</strong>',
+		'options' => array(
+			(object) array(
+				'title' => 'Default TOC Box Title',
+				'key' => 'DEF_TITLE', //'val' => htmlentities($this->DEF_TITLE),
+				'help' => 'The default TOC box title when none is given via shortcode parameter.' ),
+			(object) array(
+				'title' => 'Default CSS Class',
+				'key' => 'DEF_CLASS', //'val' => $this->DEF_CLASS,
+				'help' => 'The default CSS class when none is given via shortcode parameter.' ),
+			(object) array(
+				'title' => 'Default Inline CSS Style',
+				'key' => 'DEF_STYLE', //'val' => htmlentities($this->DEF_STYLE),
+				'help' => 'The default inline CSS style when none is given via shortcode parameter.' ),
+			(object) array(
+				'title' => 'Default Hint',
+				'key' => 'DEF_HINT', //'val' => htmlentities($this->DEF_HINT),
+				'help' => 'The default hint text when none is given via shortcode parameter.' ),
+			(object) array(
+				'title' => 'Default TOC Enhancements',
+				'key' => 'DEF_ENHANCE', //'val' => $this->DEF_ENHANCE,
+				'help' => 'The default TOC box enhancements. Currently only "<tt>comments</tt>" is supported.' ),
+		)),
+	(object) array(
+		'title' => 'Automatic Insertion Settings',
+		'help' => 'Settings to control position and appearence of auto-inserted TOC boxes.',
+		'options' => array(
+			(object) array(
+				'title' => 'Automatic Insertion',
+				'key' => 'AUTO_INSERT', //'val' => $this->AUTO_INSERT,
+				'style' => 'max-width: 10em',
+				'help' => 'Controls automatic TOC box insertion into posts and pages:<br />&nbsp;&nbsp;<tt>@start</tt> = insert BEFORE content<br />&nbsp;&nbsp;<tt>@end</tt> = insert AFTER content<br />&nbsp;&nbsp;<tt>@start+end</tt> = insert before AND after content<br />&nbsp;&nbsp;empty or anything else = do not insert automatically' ),
+			(object) array(
+				'title' => 'CSS Class For Auto-Insertion',
+				'key' => 'AUTO_CLASS', //'val' => $this->AUTO_CLASS,
+				'help' => 'The CSS class used for automatically inserted TOC boxes.<br />If none specified, the default CSS class above will be used instead.' ),
+			(object) array(
+				'title' => 'CSS Style For Auto-Insertion',
+				'key' => 'AUTO_STYLE', //'val' => htmlentities($this->AUTO_STYLE),
+				'help' => 'The inline CSS style used for automatically inserted TOC boxes.<br />If none specified, the default CSS style above will be used instead.' ),
+		)),
+	);
 
+?>
+<?php // ------------------------------------------------------------------------------------ ?>
+<style type="text/css">
+<?php
+	$R = '3px';
+	$sideWidth = '13em';
+?>
+a.button { display: inline-block; margin: 5px 0 }
+/* div.main { margin-right: <?php echo $sideWidth ?> } */
+dd form.collapsed { display: none; margin: 1em; padding: 5px; border: 1px solid #ccc }
+dd form p.submit { padding: 0 }
+dd form table th { text-align: right }
+dd form table th:after { content: ":" }
+
+dl { padding: 0; margin: 10px 1em 20px 0; background-color: white; border: 1px solid #ddd; }
+dt { font-size: 10pt; font-weight: bold; margin: 0; padding: 4px 10px 4px 10px;
+	background: #dfdfdf url(http://lh4.ggpht.com/_eYaV9fZ6qRg/SkFP0KzGcXI/AAAAAAAAALA/aQJlXvTd-IE/s800/bg-pane-header-gray.png) repeat-x left top;/*
+	border-bottom: 1px solid #ddd;*/
+}
+dd { margin: 0; padding: 10px 20px 10px 20px }
+dl {<?php foreach (array('-moz-', '-khtml-', '-webkit-', '') as $pfx) echo " {$pfx}border-radius: $R;" ?> }
+
+dd .caveat { font-weight: bold; color: #C00; text-align: center }
+
+.box { border: 1px solid #ccc; padding: 5px; margin: 5px }
+.help { background-color: whitesmoke }
+
+</style>
+<?php // ------------------------------------------------------------------------------------ ?>
+<div class="wrap">
+<h2>Hackadelic TOC Settings</h2>
+
+<?php
 $slugWP = 'table-of-content-boxes';
 $slugHome = 'toc-boxes';
-$admPageTitle = 'Hackadelic TOC '.$this->t('Settings');
 include 'hackadelic-toc-admx.php';
+
+$helpicon = 'http://lh3.ggpht.com/_eYaV9fZ6qRg/SkFS5WKMVRI/AAAAAAAAALE/BH-09LuNRg8/s800/help.png';
 ?>
 
-<form method="post" action="options.php">
-<?php wp_nonce_field('update-options'); ?>
-
-<table class="form-table" style="clear:none">
-
-<?php $nr = 0;
-foreach ($options as $each) :
-	++$nr; unset($section); unset($sechelp); unset($opstyle); extract($each); $oplist[] = $opkey
-?>
-<?php if (isset($section)) : ?>
-<tr style="border-bottom: 1px solid #ccc">
-<th colspan="2">
-<?php if (!isset($sechelp)) : ?>
-	<strong><?php _e($section) ?>:</strong>
-<?php else: ?>
-	<strong style="cursor:help" onclick="jQuery('#sechelp-<?php echo $nr ?>').slideToggle('fast')"><?php _e($section) ?>:</strong>
-	<div class="hidden" id="sechelp-<?php echo $nr ?>" style="font-size: .85em; border: 1px solid #ccc; margin: 1em; padding: 1em" >
-	<em><?php _e($sechelp) ?></em>
-	</div>
+<?php // ------------------------------------------------------------------------------------ ?>
+<?php if ($updated) : ?>
+<div class="updated fade"><p>Plugin settings <?php echo ($status == 'reset') ? 'reset' : 'saved' ?>.</p></div>
 <?php endif ?>
-</th>
-</tr>
-<?php endif ?>
-<tr>
-<td>
-	<input <?php echo $opstyle ? "style=\"$opstyle\"" : 'style="width:100%"' ?>
-	type="text" name="<?php echo $opkey ?>" value="<?php echo $opval ?>" />
-	<div><em><?php $this->e($ophlp) ?></em></div>
-</td>
-<th scope="row"><?php $this->e($optitle) ?></th>
-</tr>
-<?php endforeach ?>
 
-</table>
+<?php // ------------------------------------------------------------------------------------ ?>
+<?php if ( /*$updated &&*/ $status == 'reset') : ?>
 
-<input type="hidden" name="action" value="update" />
-<input type="hidden" name="page_options" value="<?php echo join(',', $oplist) ?>" />
-<p class="submit">
-<input type="submit" name="Submit" value="<?php _e('Save Changes') ?>" />
-</p>
+<form method="post" action="<?php echo $actionURL ?>">
+	<?php wp_nonce_field($context); ?>
+	<p class="submit" align="center">
+		<input type="submit" name="continue" value="Continue ..." />
+	</p>
 </form>
 
+<?php // ------------------------------------------------------------------------------------ ?>
+<?php else: ?>
+
+<form method="post">
+	<input type="hidden" name="action" value="update" />
+	<?php wp_nonce_field($context); ?>
+
+<?php foreach ($sections as $s) : $snr += 1; $shlpid = "shlp-$snr" ?>
+<dl>
+	<dt><?php echo $s->title ?><?php 
+	if ($s->help) : 
+		?> <a href="javascript:;" onclick="jQuery('#<?php echo $shlpid ?>').slideToggle('fast')"><img src="<?php
+			echo $helpicon ?>" /></a><?php
+	endif ?></dt>
+	<dd>
+<?php if ($s->help) : ?>
+	<div id="<?php echo $shlpid ?>" class="hidden help box"><?php echo $s->help ?></div>
+<?php endif ?>
+
+		<table class="form-table" style="clear:none">
+<?php foreach ($s->options as $o) :
+	$key = $o->key;
+	//printf("<pre>%s</pre>", print_r($o, true));
+	$v = $options->$key; $t = gettype($v);
+	$type = ' type="' . (isset($o->type) ? $o->type : 'text') . '"';
+	$style = $o->style ? " style=\"$o->style\"" : 'style="width:100%"';
+	$attr = $type . $style . ' name="'.$key.'"';
+	unset($type, $style);
+	if ($o->type == 'checkbox'):
+		if ($v): $attr .= ' checked="checked"'; endif;
+	else:
+		$attr .= ' value="'.$v.'"';
+	endif;
+	$text = $o->text ? " <span>$o->text</span>" : '';
+	//echo ("<p align=\"right\" style=\"border-bottom:1px solid #ccc\">key: $key; type: $t; value ($t): $v<br />attr: $attr</p>");
+	//continue;
+?>
+		<tr>
+			<th scope="row"><?php echo $o->title ?></th>
+			<td>
+				<div style="vertical-align:bottom"><input<?php echo $attr ?> /><?php echo $text ?></div>
+				<div><em><?php echo $o->help ?></em></div>
+			</td>
+		</tr>
+<?php endforeach ?>
+		</table>
+	</dd>
+</dl>
+<?php endforeach ?>
+
+	<p class="submit" align="center">
+		<input type="submit" name="submit" value="<?php _e('Save Settings') ?>"  title="This will store the settings to the database." />
+		<input type="submit" name="reset" value="<?php _e('Reset Settings') ?>" title="This will remove the settings from the database, giving you the factory defaults"/>
+	</p>
+</form>
+
+<?php endif // if ($status) ... ?>
 </div>

@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic TOC Boxes
-Version: 1.6.0dev1
+Version: 1.6.0dev2
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -17,12 +17,21 @@ class HackadelicTOCContext
 {
 	function CTXID() { return get_class($this); }
 
+	// Misc -------------------------------------------------------------------------------
+
+	function assignTo(&$var, $value) {
+		settype($value, gettype($var));
+		$var = $value;
+	}
+
 	// I18N -------------------------------------------------------------------------------
 
 	function t($s) { return __($s, $this->CTXID());	}
 	function e($s) { _e($s, $this->CTXID());	}
 
 	// Option Access ----------------------------------------------------------------------
+	// Legacy code for compatibility with versions prior to 1.6
+	// To be removed two versions ahead of 1.6.0 (that is, in version >= 1.6.2)
 
 	function fullname($name) {
 		return $this->CTXID() . '__' . $name;
@@ -35,10 +44,6 @@ class HackadelicTOCContext
 		$option = ($eval == null) ? $value : call_user_func($eval, $value);
 		return $value != $oldvalue;
 	}
-	function save_option(&$option, $name) {
-		$name = $this->fullname($name);
-		update_option($name, $option);
-	}
 	function erase_option($name) {
 		$name = $this->fullname($name);
 		delete_option($name);
@@ -49,43 +54,9 @@ class HackadelicTOCContext
 // Main
 // ===========================================================================
 
-//class HackadelicTOCSettings
-//{
-//	var $MAX_LEVEL = 4;
-//	var $REL_ATTR = 'bookmark nofollow';
-//	var $BCOMPAT_ANCHORS = true;
-//
-//	var $DEF_TITLE = /*'&nabla; '.*/'In this writing:';
-//	var $DEF_CLASS = '';
-//	var $DEF_STYLE = '';
-//	var $DEF_HINT = 'table of contents (click to expand/collapse)';
-//	var $DEF_ENHANCE = 'comments';
-//
-//	var $AUTO_INSERT = '';
-//	var $AUTO_CLASS = ''; // used with AUTO_INSERT
-//	var $AUTO_STYLE = ''; // used with AUTO_INSERT
-//
-//	var $INCL_COMMENTS = true;
-//
-//	function load($ctx) {
-//		$ctx->load_option($this->MAX_LEVEL, 'MAX_LEVEL', 'intval');
-//		$ctx->load_option($this->REL_ATTR, 'REL_ATTR', 'trim');
-//		$ctx->load_option($this->BCOMPAT_ANCHORS, 'BCOMPAT_ANCHORS', create_function('$s', 'return trim($s) == "on"'));
-//
-//		$ctx->load_option($this->DEF_TITLE, 'DEF_TITLE');
-//		$ctx->load_option($this->DEF_CLASS, 'DEF_CLASS', 'trim');
-//		$ctx->load_option($this->DEF_STYLE, 'DEF_STYLE', 'trim');
-//		$ctx->load_option($this->DEF_HINT, 'DEF_HINT');
-//
-//		$ctx->load_option($this->AUTO_INSERT, 'AUTO_INSERT', 'trim');
-//		$ctx->load_option($this->AUTO_CLASS, 'AUTO_CLASS', 'trim');
-//		$ctx->load_option($this->AUTO_STYLE, 'AUTO_STYLE', 'trim');
-//	}
-//}
-
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.6.0dev1';
+	var $VERSION = '1.6.0dev2';
 
 	//-------------------------------------------------------------------------------------
 	// Options:
@@ -118,8 +89,6 @@ class HackadelicTOC extends HackadelicTOCContext
 	function HackadelicTOC() {
 		$this->initOptionsMap();
 		$this->loadOptions();
-
-		//die(print_r(compact($this->MAX_LEVEL, $this->REL_ATTR), true));
 
 		if (is_admin()) {
 			add_action('admin_menu', array(&$this, 'addAdminMenu'));
@@ -202,16 +171,6 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ( !is_single() && !is_page() ) return $content;
 
 		$n = $this->MAX_LEVEL;
-		//--
-		//-- Derived from Artem's patch, see http://wordpress.org/support/topic/268259 :
-		//--
-		// Replacing of the following 3 lines,
-		/*
-		$regex1 = '@<h([1-'.$n.'])\s+.*?>(.+?)</h\1>@i';
-		$regex2 = '@<h([1-'.$n.'])>(.+)</h\1>@i';
-		$pattern = array($regex1, $regex2);
-		*/
-		// With this one:
 		$pattern = '@<h([1-'.$n.'])(?:\s+.*?)?>(.+?)</h\1>@i';
 		$callback = array(&$this, 'doHeader');
 
@@ -237,6 +196,7 @@ class HackadelicTOC extends HackadelicTOCContext
 			? $posturl . '&amp;page=' . $i
 			: trailingslashit($posturl) . user_trailingslashit($i, 'single_paged') );
 		//BEGIN workaround for conflict with plugin "Nofollow Reciprocity"
+		//Note: Since I fixed "Nofollow Reciprocity", this should go away after I publish the fix.
 		$url = preg_replace( "@.*://[^/]*@i", '', $url);
 		//END workaround for conflict with plugin "Nofollow Reciprocity"
 		return $url;
@@ -285,13 +245,6 @@ class HackadelicTOC extends HackadelicTOCContext
 		$rel = $this->REL_ATTR;
 		foreach ($this->headers as $each) {
 			extract($each);
-/*			This whole block is superfluous, now that the text is strip_tags()'ed in collectTOC
-			//-- To handle anchors in headings, either
-			// a) separate TOC link from TOC title => will give us titles 1:1, but not clickable
-			//$toc .= "<li class=\"toc-level-$level\"><a rel=\"bookmark\" href=\"$href\" title=\"Jump\">&nbsp;&raquo;&nbsp;</a>$text</li>";
-			//-- Or b): Filter out anchor HTML => is it enough? any other elements to filter?
-			$text = preg_replace(array('@<a>(.+?)</a>@i', '@<a\s+.*?>(.+?)</a>@i'), '\1', $text);
-*/
 			$toc .= "<li class=\"toc-level-$level\"><a rel=\"$rel\" href=\"$href\" title=\"$text\">$text</a></li>";
 		}
 
@@ -336,8 +289,8 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function doEpilogue() {
 ?>
-<!-- Hackadelic TOC Boxes <?php echo $this->VERSION ?>, http://hackadelic.com -->
-<span style="display:none">This site uses <a href="http://hackadelic.com/solutions/wordpress/toc-boxes">Hackadelic TOC Boxes <?php echo $this->VERSION ?></a>, a <a href="http://hackadelic.com">Hackadelic</a> PlugIn.</span>
+<?php /* <!-- Hackadelic TOC Boxes <?php echo $this->VERSION ?>, http://hackadelic.com -->  */ ?>
+<span style="display:none">This site uses a <a href="http://hackadelic.com">Hackadelic</a> PlugIn, <a href="http://hackadelic.com/solutions/wordpress/toc-boxes">Hackadelic TOC Boxes <?php echo $this->VERSION ?></a>.</span>
 <script type="text/javascript">
 function tocToggle(toc, box) {
 	var q = jQuery(toc);
@@ -348,15 +301,6 @@ function tocToggle(toc, box) {
 }
 </script>
 <?php
-	}
-
-	//=====================================================================================
-	// AUX
-	//=====================================================================================
-
-	function assignTo(&$var, $value) {
-		settype($value, gettype($var));
-		$var = $value;
 	}
 
 	//=====================================================================================
@@ -376,12 +320,12 @@ function tocToggle(toc, box) {
 		$options = $this->op;
 		$updated = false;
 		$status = '';
-		if ( $_POST['action'] == 'update' ) {
+		if ( $_POST['action'] == 'update' ):
 			check_admin_referer($context);
-			//die(sprintf('<PRE>%s</PRE>', print_r($_POST, true)));
 			if (isset($_POST['submit'])):
 				foreach ($options as $key => $val):
-					$bistate = $key == 'BCOMPAT_ANCHORS';
+					//$bistate = $key == 'BCOMPAT_ANCHORS';
+					$bistate = is_bool($val);
 					if ($bistate):
 						$newval = isset($_POST[$key]);
 					else:
@@ -392,16 +336,13 @@ function tocToggle(toc, box) {
 					$this->assignTo($options->$key, $newval);
 					$updated = true; $status = 'updated';
 				endforeach;
-				//die(sprintf('<PRE>%s</PRE>', print_r($options, true)));
 				if ($updated): update_option($context, $options); endif;
 			elseif (isset($_POST['reset'])):
-				//echo sprintf('<PRE>%s</PRE>', print_r($_POST, true));
 				delete_option($context);
 				$updated = true; $status = 'reset';
 			endif;
-		}
+		endif;
 		include 'hackadelic-toc-settings.php';
-		//echo(sprintf('<PRE>%s</PRE>', print_r($options, true)));
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -417,6 +358,8 @@ function tocToggle(toc, box) {
 			$this->op->$name = &$this->$name;
 	}
 
+	//-------------------------------------------------------------------------------------
+
 	function loadOptions() {
 		$context = $this->CTXID();
 		$options = $this->op;
@@ -425,7 +368,7 @@ function tocToggle(toc, box) {
 			if (!isset($saved->$key)) continue;
 			$this->assignTo($options->$key, $saved->$key);
 		}
-		// Backward compatibility hack, to be removed in 
+		// Backward compatibility hack, to be removed in a future version
 		$this->migrateOptions($options, $context);
 	}
 
@@ -436,7 +379,8 @@ function tocToggle(toc, box) {
 		$anychange = false;
 		foreach ( (array) $options as $key => $val ):
 			// 1) load options from prior version
-			$bistate = $key == 'BCOMPAT_ANCHORS';
+			//$bistate = $key == 'BCOMPAT_ANCHORS';
+			$bistate = is_bool($val);
 			$v = $bistate ? ($val ? 'on' : 'off') : (string) $val;
 			$modified = $this->load_option($v, $key, 'trim');
 			$val = $bistate ? ($v == 'on') : $v;

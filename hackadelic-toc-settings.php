@@ -17,7 +17,6 @@ $sections = array(
 			(object) array(
 				'title' => 'TOC Anchor Backward Compatibility',
 				'key' => 'BCOMPAT_ANCHORS', //'val' => $this->BCOMPAT_ANCHORS,
-				'type' => 'checkbox',
 				'style' => 'max-width: 5em',
 				'text' => 'Keep old style anchors?',
 				'help' => 'Whether to keep old-style anchors <u>in addition</u> to new style achnors. Required only if your blog contained explicit links to old-style TOC anchors (such as /myblog/some-post<b>#toc-17-2</b>), that would break by switching to new style anchors.' ),
@@ -79,7 +78,7 @@ $sections = array(
 	$sideWidth = '13em';
 ?>
 a.button { display: inline-block; margin: 5px 0 }
-/* div.main { margin-right: <?php echo $sideWidth ?> } */
+
 dd form.collapsed { display: none; margin: 1em; padding: 5px; border: 1px solid #ccc }
 dd form p.submit { padding: 0 }
 dd form table th { text-align: right }
@@ -148,20 +147,16 @@ $helpicon = 'http://lh3.ggpht.com/_eYaV9fZ6qRg/SkFS5WKMVRI/AAAAAAAAALE/BH-09LuNR
 		<table class="form-table" style="clear:none">
 <?php foreach ($s->options as $o) :
 	$key = $o->key;
-	//printf("<pre>%s</pre>", print_r($o, true));
 	$v = $options->$key; $t = gettype($v);
-	$type = ' type="' . (isset($o->type) ? $o->type : 'text') . '"';
+	//$type = ' type="' . (isset($o->type) ? $o->type : (is_bool($v) ? 'checkbox' : 'text')) . '"';
+
+	$type = ' type="' . (is_bool($v) ? 'checkbox' : 'text') . '"';
 	$style = $o->style ? " style=\"$o->style\"" : 'style="width:100%"';
-	$attr = $type . $style . ' name="'.$key.'"';
-	unset($type, $style);
-	if ($o->type == 'checkbox'):
-		if ($v): $attr .= ' checked="checked"'; endif;
-	else:
-		$attr .= ' value="'.$v.'"';
-	endif;
+	$value = is_bool($v) ? ($v ? ' checked="checked"' : '') : ' value="'.$v.'"';
+	$name = ' name="'.$key.'"';
+	$attr = $type . $style . $name . $value;
+	unset($type, $style, $name, $value);
 	$text = $o->text ? " <span>$o->text</span>" : '';
-	//echo ("<p align=\"right\" style=\"border-bottom:1px solid #ccc\">key: $key; type: $t; value ($t): $v<br />attr: $attr</p>");
-	//continue;
 ?>
 		<tr>
 			<th scope="row"><?php echo $o->title ?></th>

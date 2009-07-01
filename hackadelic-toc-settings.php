@@ -143,7 +143,6 @@ $helpicon = 'http://lh3.ggpht.com/_eYaV9fZ6qRg/SkFS5WKMVRI/AAAAAAAAALE/BH-09LuNR
 <?php foreach ($s->options as $o) :
 	$key = $o->key;
 	$v = $options->$key; $t = gettype($v);
-	//$type = ' type="' . (isset($o->type) ? $o->type : (is_bool($v) ? 'checkbox' : 'text')) . '"';
 
 	$type = ' type="' . (is_bool($v) ? 'checkbox' : 'text') . '"';
 	$style = $o->style ? " style=\"$o->style\"" : 'style="width:100%"';

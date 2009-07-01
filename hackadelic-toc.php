@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic SEO Table Of Contents
-Version: 1.6.0dev4
+Version: 1.6.0
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -57,7 +57,7 @@ class HackadelicTOCContext
 
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.6.0dev4';
+	var $VERSION = '1.6.0';
 
 	//-------------------------------------------------------------------------------------
 	// Options:
@@ -108,13 +108,6 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function start() {
 		$me = new HackadelicTOC();
-		//NOTE: Interestingly, the following call does not work inside an instance method.
-		//      However, it works here, as this method is invoked statically.
-		register_deactivation_hook(__FILE__, array(&$me, 'uninstall'));
-	}
-
-	function uninstall() {
-		delete_option($this->CTXID());
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -276,7 +269,6 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ($class) $class = ' '.$class;
 		if ($style) $style = ' style="'.$style.'"';
 
-		//$clickCode = "jQuery('#$tocID').slideToggle('fast')";
 		$clickCode = "tocToggle('#$tocID', '#$boxID')";
 		$titleAttr = $hint ? " title=\"$hint\"" : '';
 
@@ -293,7 +285,7 @@ class HackadelicTOC extends HackadelicTOCContext
 	function doEpilogue() {
 ?>
 <?php /* <!-- Hackadelic TOC Boxes <?php echo $this->VERSION ?>, http://hackadelic.com -->  */ ?>
-<span style="display:none">This site uses a <a href="http://hackadelic.com">Hackadelic</a> PlugIn, <a href="http://hackadelic.com/solutions/wordpress/toc-boxes">Hackadelic TOC Boxes <?php echo $this->VERSION ?></a>.</span>
+<span style="display:none">This site uses a <a href="http://hackadelic.com">Hackadelic</a> PlugIn, <a href="http://hackadelic.com/solutions/wordpress/toc-boxes">Hackadelic SEO Table Of Contents <?php echo $this->VERSION ?></a>.</span>
 <script type="text/javascript">
 function tocToggle(toc, box) {
 	var q = jQuery(toc);

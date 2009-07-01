@@ -1,4 +1,4 @@
-=== Hackadelic SEO Table Of Contents Boxes ===
+=== Hackadelic SEO Table Of Contents ===
 Contributors: Hackadelic
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1805414
 Tags: content, page, Post, AJAX, shortcode

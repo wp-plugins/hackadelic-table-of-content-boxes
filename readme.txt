@@ -10,7 +10,7 @@ Easy to use, freely positionable, fancy AJAX-style table of contents for WordPre
 
 == Description ==
 
-Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic Table Of Contents Boxes") for in-depth information about the plug-in.
+Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic SEO Table Of Contents") for in-depth information about the plug-in.
 
 == Changelog ==
 
@@ -45,7 +45,7 @@ Many thanks to Artem for contributing [the](http://wordpress.org/support/topic/2
 * New (pretty) naming scheme for heading anchors. Heading anchor names are derived from a sanitized form of the corresponding heading now, resulting into better readability and better SEO. Thanks to [an idea of johnbillion](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity#comment-656).
 * Several bug fixes and improvements.
 
-**Please check if your CSS styling needs an update, [according to the updated CSS template on the plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#installation"Hackadelic Table Of Contents Boxes - Installation").**
+**Please check if your CSS styling needs an update, [according to the updated CSS template on the plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#installation"Hackadelic SEO Table Of Contents - Installation").**
 
 #### [1.2.1](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity)
 
@@ -73,21 +73,21 @@ Initial public release
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 1. Go to the Plugins page and activate the plugin.
 1. Activate the plug-in as usual.
-1. Copy the CSS template fragment from the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#css-setup "Hackadelic Table Of Contents Boxes") to your CSS file (either your themes style.css file, or, which I would recommend, through the [MyCSS plug-in](http://wordpress.org/extend/plugins/ "MyCSS plug-in"), and adjust it to your liking.
+1. Copy the CSS template fragment from the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#css-setup "Hackadelic SEO Table Of Contents") to your CSS file (either your themes style.css file, or, which I would recommend, through the [MyCSS plug-in](http://wordpress.org/extend/plugins/ "MyCSS plug-in"), and adjust it to your liking.
 
 == Screenshots ==
 
-Screenshots are boring. See the plug-in live in action at the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic Table Of Contents Boxes"). :-) 
+Screenshots are boring. See the plug-in live in action at the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic SEO Table Of Contents"). :-) 
 
 == License ==
 
-This file is part of the *Hackadelic Table Of Contents Boxes* WordPress plugin.
+This file is part of the *Hackadelic SEO Table Of Contents* WordPress plugin.
 
-*Hackadelic Table Of Contents Boxes* is free software: you can redistribute it and/or modify it under the terms of the [GNU Affero General Public License](http://www.fsf.org/licensing/licenses/agpl-3.0.html) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*Hackadelic SEO Table Of Contents* is free software: you can redistribute it and/or modify it under the terms of the [GNU Affero General Public License](http://www.fsf.org/licensing/licenses/agpl-3.0.html) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-*Hackadelic Table Of Contents Boxes* is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+*Hackadelic SEO Table Of Contents* is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License along with *Hackadelic Table Of Contents Boxes*. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License along with *Hackadelic SEO Table Of Contents*. If not, see <http://www.gnu.org/licenses/>.
 
 == Frequently Asked Questions ==
 

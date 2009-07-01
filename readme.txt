@@ -22,7 +22,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 * Increased security.
 * Overhauled back-end UI.
 * Various code improvements.
-* License change from GPL 2.0 to GNU Affero GPL (AGPL) 3.0. According to the FSF, the AGPL is better suited for web programs, as it requires derivative work that is accessible through a web server to be also published in source code.
+* License change from GPL 2.0 to GNU Affero GPL (AGPL) 3.0.
 
 #### [1.5.2 - Artem's Rib](http://hackadelic.com/toc-boxes-152-release-artems-rib)
 

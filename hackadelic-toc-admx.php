@@ -89,9 +89,18 @@ $infomercials = array(
 	<hr size="0" />
 	<center><small>
 		<!-- Creative Commons License -->
+		<a rel="nofollow" href="http://www.fsf.org/licensing/licenses/agpl-3.0.html">
+		<img alt="AGPL" border="0" src="http://www.gnu.org/graphics/agplv3-155x51.png" /></a><br />
+		This software is licensed under the <a href="http://www.fsf.org/licensing/licenses/agpl-3.0.html">GNU Affero GPL</a> version 3.0 or later.
+
+<?php /* ?>
+		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />This software is licensed under a<br /><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons<br /><small>(BY-NC-SA)</small><br /> 3.0 Unported License</a>.
+
+<?php /* ?>
 		<a rel="nofollow" href="http://creativecommons.org/licenses/GPL/2.0/">
 		<img alt="CC-GNU GPL" border="0" src="http://creativecommons.org/images/public/cc-GPL-a.png" /></a><br />
 		This software is licensed under the <a href="http://creativecommons.org/licenses/GPL/2.0/">CC-GNU GPL</a> version 2.0 or later.
+<?php */ ?>
 		<!-- /Creative Commons License -->
 	</small></center>
 </div>

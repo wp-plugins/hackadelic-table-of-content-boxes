@@ -79,15 +79,13 @@ $sections = array(
 ?>
 a.button { display: inline-block; margin: 5px 0 }
 
-dd form.collapsed { display: none; margin: 1em; padding: 5px; border: 1px solid #ccc }
-dd form p.submit { padding: 0 }
-dd form table th { text-align: right }
-dd form table th:after { content: ":" }
-
 dl { padding: 0; margin: 10px 1em 20px 0; background-color: white; border: 1px solid #ddd; }
 dt { font-size: 10pt; font-weight: bold; margin: 0; padding: 4px 10px 4px 10px;
-	background: #dfdfdf url(http://lh4.ggpht.com/_eYaV9fZ6qRg/SkFP0KzGcXI/AAAAAAAAALA/aQJlXvTd-IE/s800/bg-pane-header-gray.png) repeat-x left top;/*
-	border-bottom: 1px solid #ddd;*/
+	background: #dfdfdf url(<?php echo admin_url('images/gray-grad.png') ?>) repeat-x left top;
+<?php	/*
+	background: #dfdfdf url(http://lh4.ggpht.com/_eYaV9fZ6qRg/SkFP0KzGcXI/AAAAAAAAALA/aQJlXvTd-IE/s800/bg-pane-header-gray.png) repeat-x left top;
+	border-bottom: 1px solid #ddd;
+*/ ?>
 }
 dd { margin: 0; padding: 10px 20px 10px 20px }
 dl {<?php foreach (array('-moz-', '-khtml-', '-webkit-', '') as $pfx) echo " {$pfx}border-radius: $R;" ?> }
@@ -100,7 +98,7 @@ dd .caveat { font-weight: bold; color: #C00; text-align: center }
 </style>
 <?php // ------------------------------------------------------------------------------------ ?>
 <div class="wrap">
-<h2>Hackadelic TOC Settings</h2>
+<h2>Hackadelic SEO Table Of Contents</h2>
 
 <?php
 $slugWP = 'table-of-content-boxes';
@@ -112,18 +110,15 @@ $helpicon = 'http://lh3.ggpht.com/_eYaV9fZ6qRg/SkFS5WKMVRI/AAAAAAAAALE/BH-09LuNR
 
 <?php // ------------------------------------------------------------------------------------ ?>
 <?php if ($updated) : ?>
-<div class="updated fade"><p>Plugin settings <?php echo ($status == 'reset') ? 'reset' : 'saved' ?>.</p></div>
+<div class="updated fade"><p>Plugin settings <?php echo ($status == 'reset') ? 'reset to default values and deleted from database. If you want to, you can safely remove the plugin now' : 'saved' ?>.</p></div>
 <?php endif ?>
 
 <?php // ------------------------------------------------------------------------------------ ?>
-<?php if ( /*$updated &&*/ $status == 'reset') : ?>
+<?php if ( $updated && $status == 'reset') : ?>
 
-<form method="post" action="<?php echo $actionURL ?>">
-	<?php wp_nonce_field($context); ?>
-	<p class="submit" align="center">
-		<input type="submit" name="continue" value="Continue ..." />
-	</p>
-</form>
+<p class="submit" align="center">
+	<a class="button" href="<?php echo $actionURL ?>">Back To Settings ...</a>
+</p>
 
 <?php // ------------------------------------------------------------------------------------ ?>
 <?php else: ?>
@@ -135,7 +130,7 @@ $helpicon = 'http://lh3.ggpht.com/_eYaV9fZ6qRg/SkFS5WKMVRI/AAAAAAAAALE/BH-09LuNR
 <?php foreach ($sections as $s) : $snr += 1; $shlpid = "shlp-$snr" ?>
 <dl>
 	<dt><?php echo $s->title ?><?php 
-	if ($s->help) : 
+	if ($s->help) :
 		?> <a href="javascript:;" onclick="jQuery('#<?php echo $shlpid ?>').slideToggle('fast')"><img src="<?php
 			echo $helpicon ?>" /></a><?php
 	endif ?></dt>

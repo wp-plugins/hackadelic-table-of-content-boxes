@@ -12,22 +12,24 @@ Easy to use, freely positionable, fancy AJAX-style table of contents for WordPre
 
 Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic Table Of Contents Boxes") for in-depth information about the plug-in.
 
-### Change Log
+== Changelog ==
 
-### [1.6.0 - Odisey](http://hackadelic.com/toc-boxes-152-release-XXX)
+### [1.6.0 - Resurrection](http://hackadelic.com/toc-boxes-is-seo-table-of-contents)
 
-* TOC box now optionally includes a link to the comments section on the page. (Idea and initial code contributed by JohnBillion; see http://hackadelic.com/toc-boxes-151-release#comment-1025)
-* Overhauled settings handling for **WPMU compatibility**. Old-style options are automatically migrated.
+* TOC box now optionally includes a link to the comments section on the page. (Idea and initial code [contributed by JohnBillion](http://hackadelic.com/toc-boxes-151-release#comment-1025))
+* Overhauled settings handling for **WPMU compatibility**. Old-style settings are automatically migrated.
 * Settings can be reset to "factory values", removing them from the database. Useful when uninstalling the plugin.
 * Increased security.
-* Various code improvements
+* Overhauled back-end UI.
+* Various code improvements.
+* License change from GPL 2.0 to GNU Affero GPL (AGPL) 3.0. According to the FSF, the AGPL is better suited for web programs, as it requires derivative work that is accessible through a web server to be also published in source code.
 
 #### [1.5.2 - Artem's Rib](http://hackadelic.com/toc-boxes-152-release-artems-rib)
 
 * Fixes formatting issues with headers containing tags.
 * Fixes a TOC box entry ordering issue due to ambiguities in the PHP regular expression handling.
 
-Many thanks to Artem for contributing [the](http://wordpress.org/support/topic/268568) [patches](href="http://wordpress.org/support/topic/268259) on this.
+Many thanks to Artem for contributing [the](http://wordpress.org/support/topic/268568) [patches](http://wordpress.org/support/topic/268259) on this.
 
 #### [1.5.1](http://hackadelic.com/toc-boxes-151-release)
 
@@ -81,11 +83,11 @@ Screenshots are boring. See the plug-in live in action at the [plug-in homepage]
 
 This file is part of the *Hackadelic Table Of Contents Boxes* WordPress plugin.
 
-*Hackadelic Table Of Contents Boxes* is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*Hackadelic Table Of Contents Boxes* is free software: you can redistribute it and/or modify it under the terms of the [GNU Affero General Public License](http://www.fsf.org/licensing/licenses/agpl-3.0.html) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-*Hackadelic Table Of Contents Boxes* is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+*Hackadelic Table Of Contents Boxes* is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with *Hackadelic Table Of Contents Boxes*. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License along with *Hackadelic Table Of Contents Boxes*. If not, see <http://www.gnu.org/licenses/>.
 
 == Frequently Asked Questions ==
 

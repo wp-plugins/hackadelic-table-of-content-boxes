@@ -1,17 +1,18 @@
 <?php 
 /*
-Plugin Name: Hackadelic TOC Boxes
-Version: 1.6.0dev2
+Plugin Name: Hackadelic SEO Table Of Contents
+Version: 1.6.0dev4
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
 Author URI: http://hackadelic.com
 */
+
+add_action('plugins_loaded', array('HackadelicTOC', 'start'));
+
 // ===========================================================================
 // Foundation
 // ===========================================================================
-
-add_action('plugins_loaded', array('HackadelicTOC', 'start'));
 
 class HackadelicTOCContext
 {
@@ -56,7 +57,7 @@ class HackadelicTOCContext
 
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.6.0dev2';
+	var $VERSION = '1.6.0dev4';
 
 	//-------------------------------------------------------------------------------------
 	// Options:
@@ -171,7 +172,7 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ( !is_single() && !is_page() ) return $content;
 
 		$n = $this->MAX_LEVEL;
-		$pattern = '@<h([1-'.$n.'])(?:\s+.*?)?>(.+?)</h\1>@i';
+		$pattern = '@<h([1-'.$n.'])(\s+.*?)?>(.+?)</h\1>@i';
 		$callback = array(&$this, 'doHeader');
 
 		global $multipage, $numpages, $pages, $page;
@@ -211,7 +212,7 @@ class HackadelicTOC extends HackadelicTOCContext
 		//--
 		// strip_tags hint contributed by Artem, see http://wordpress.org/support/topic/268568
 		//--
-		$text = strip_tags($match[2]);
+		$text = strip_tags($match[3]);
 		$anchor = sanitize_title( $text, $anchor0 );
 		$this->headers[] = array(
 			'level' => $match[1],
@@ -219,9 +220,9 @@ class HackadelicTOC extends HackadelicTOCContext
 			'href0' => "$this->url#$anchor0",
 			'href' => "$this->url#$anchor",
 			);
-		$result = '<a class="toc-anchor" name="'.$anchor.'"></a>';
-		if ($this->BCOMPAT_ANCHORS) $result .= '<a class="toc-anchor" name="'.$anchor0.'"></a>';
-		return $result . $match[0];
+		$anchor = '<a class="toc-anchor" name="'.$anchor.'"></a>';
+		if ($this->BCOMPAT_ANCHORS) $anchor .= '<a class="toc-anchor" name="'.$anchor0.'"></a>';
+		return $anchor . $match[0];
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -238,6 +239,8 @@ class HackadelicTOC extends HackadelicTOCContext
 			), $atts ));
 		return $auto == 'off' ? '' : $this->renderTOC($class, $style, $hint, $title, $enhance);
 	}
+
+	//-------------------------------------------------------------------------------------
 
 	function renderTOC($class, $style, $hint, $title, $enhance) {
 		if (!$this->headers) return '';
@@ -308,7 +311,7 @@ function tocToggle(toc, box) {
 	//=====================================================================================
 
 	function addAdminMenu() {
-		$title = 'Hackadelic TOC';
+		$title = 'Hackadelic SEO TOC';
 		add_options_page($title, $title, 10, __FILE__, array(&$this, 'handleOptions'));
 	}
 

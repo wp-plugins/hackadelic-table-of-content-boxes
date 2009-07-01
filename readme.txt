@@ -111,4 +111,4 @@ Yes, since version 1.2.
 
 = I love your work, are you available for hire? =
 
-Yes I am. [Contact me](http://hackadelic.com/contact) to "talk turkey" :)
+[Yes I am](http://hackadelic.com/services). [Contact me](http://hackadelic.com/contact) to "talk turkey" :)

@@ -14,7 +14,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 == Changelog ==
 
-### [1.6.0 - Resurrection](http://hackadelic.com/toc-boxes-is-seo-table-of-contents)
+#### [1.6.0 - Resurrection](http://hackadelic.com/toc-boxes-is-seo-table-of-contents)
 
 * TOC boxes now optionally include a link to the comments section on the page. (Idea and initial code [contributed by JohnBillion](http://hackadelic.com/toc-boxes-151-release#comment-1025))
 * Overhauled settings handling for **WPMU compatibility**. Old-style settings are automatically migrated.

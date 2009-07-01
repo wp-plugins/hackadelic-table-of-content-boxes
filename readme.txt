@@ -1,4 +1,4 @@
-=== Hackadelic Table Of Contents Boxes ===
+=== Hackadelic SEO Table Of Contents Boxes ===
 Contributors: Hackadelic
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1805414
 Tags: content, page, Post, AJAX, shortcode
@@ -16,7 +16,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 ### [1.6.0 - Resurrection](http://hackadelic.com/toc-boxes-is-seo-table-of-contents)
 
-* TOC box now optionally includes a link to the comments section on the page. (Idea and initial code [contributed by JohnBillion](http://hackadelic.com/toc-boxes-151-release#comment-1025))
+* TOC boxes now optionally include a link to the comments section on the page. (Idea and initial code [contributed by JohnBillion](http://hackadelic.com/toc-boxes-151-release#comment-1025))
 * Overhauled settings handling for **WPMU compatibility**. Old-style settings are automatically migrated.
 * Settings can be reset to "factory values", removing them from the database. Useful when uninstalling the plugin.
 * Increased security.

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: content, page, Post, AJAX, shortcode, toc
 Requires at least: 2.6
 Tested up to: 2.8.5
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 
@@ -14,7 +14,7 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 == Changelog ==
 
-#### 1.6.1
+#### 1.7.0
 
 * TOC box dynamic effects are now optional (and jQuery is not loaded when turned off).
 * TOC entries on the active post page get the extra CSS class 'active'. Useful for TOC's on mutlipage posts.

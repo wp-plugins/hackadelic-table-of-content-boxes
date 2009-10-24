@@ -24,6 +24,11 @@ $sections = array(
 				'title' => 'TOC Link REL Attribute Value',
 				'key' => 'REL_ATTR', //'val' => $this->REL_ATTR,
 				'help' => 'Value of the <tt>rel</tt> attribute of links in TOC boxes. Convention is to set it to "bookmark", but other attributes can be added, too. For example, you can add "nofollow" to prevent SEO juice from spreading to secondary pages in multipage posts.' ),
+			(object) array(
+				'title' => 'Dynamic Effects',
+				'text' => 'Suppress dynamic effects (javascript)',
+				'key' => 'NOEFFECTS', //'val' => $this->REL_ATTR,
+				'style' => 'max-width: 5em', ),
 		)),
 	(object) array(
 		'title' => 'Shortcode Parameter Defaults',
@@ -98,12 +103,14 @@ dd .caveat { font-weight: bold; color: #C00; text-align: center }
 </style>
 <?php // ------------------------------------------------------------------------------------ ?>
 <div class="wrap">
+<div id="icon-options-general" class="icon32"><br /></div>
 <h2>Hackadelic SEO Table Of Contents</h2>
 
 <?php
 $slugWP = 'table-of-content-boxes';
 $slugHome = 'toc-boxes';
-include 'hackadelic-toc-admx.php';
+//include 'hackadelic-toc-admx.php';
+include 'common/xadm.php';
 
 $helpicon = 'http://lh3.ggpht.com/_eYaV9fZ6qRg/SkFS5WKMVRI/AAAAAAAAALE/BH-09LuNRg8/s800/help.png';
 ?>

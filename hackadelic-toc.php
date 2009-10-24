@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic SEO Table Of Contents
-Version: 1.6.0
+Version: 1.6.1dev0
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -23,6 +23,15 @@ class HackadelicTOCContext
 	function assignTo(&$var, $value) {
 		settype($value, gettype($var));
 		$var = $value;
+	}
+	function setVar(&$var, $mainVal, $auxVal) {
+		$var = $mainVal ? $mainVal : $auxVal;
+	}
+	function signature() {
+		$s = $this->info['slug'];
+		$t = "Powered by ".$this->info['title']." ".$this->info['version'];
+		$p = "Powered by SEO TOC ".$this->info['version'];
+		return '<div align="center" style="margin-top: 5px; font-size: 7px"><a href="http://hackadelic.com/solutions/wordpress/'.$s.'" title="'.$t.'">'.$p.'</a></div>';
 	}
 
 	// I18N -------------------------------------------------------------------------------
@@ -57,7 +66,10 @@ class HackadelicTOCContext
 
 class HackadelicTOC extends HackadelicTOCContext
 {
-	var $VERSION = '1.6.0';
+	var $info = array( // Make sure this is equal to the information in the plug-in header!
+		'title' => 'Hackadelic SEO Table Of Contents',
+		'version' => '1.6.1',
+		'slug' => 'toc-boxes');
 
 	//-------------------------------------------------------------------------------------
 	// Options:
@@ -69,12 +81,14 @@ class HackadelicTOC extends HackadelicTOCContext
 	var $DEF_TITLE = /*'&nabla; '.*/'In this writing:';
 	var $DEF_CLASS = '';
 	var $DEF_STYLE = '';
-	var $DEF_HINT = 'table of contents (click to expand/collapse)';
+	var $DEF_HINT = 'table of contents';
 	var $DEF_ENHANCE = 'comments';
 
 	var $AUTO_INSERT = '';
 	var $AUTO_CLASS = ''; // used with AUTO_INSERT
 	var $AUTO_STYLE = ''; // used with AUTO_INSERT
+
+	var $NOEFFECTS = false;
 
 	var $op; // bundled option references
 
@@ -96,7 +110,8 @@ class HackadelicTOC extends HackadelicTOCContext
 		}
 		else {
 			add_shortcode('toc_usage', array(&$this, 'doTOCUsageShortcode'));
-			add_action('wp_print_scripts', array(&$this, 'enqueueScripts'));
+			if (!$this->NOEFFECTS)
+				add_action('wp_print_scripts', array(&$this, 'enqueueScripts'));
 			add_filter('the_content', array(&$this, 'collectTOC'));
 			add_shortcode('toc', array(&$this, 'doTOCShortcode'));
 			if ($this->AUTO_INSERT) add_filter('the_content', array(&$this, 'autoInsertTOC'), 12);
@@ -147,12 +162,6 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function renderAutoTOC($class, $style) {
 		return $this->renderTOC($class, $style, $this->DEF_HINT, $this->DEF_TITLE, $this->DEF_ENHANCE);
-	}
-
-	//-------------------------------------------------------------------------------------
-
-	function setVar(&$var, $mainVal, $auxVal) {
-		$var = $mainVal ? $mainVal : $auxVal;
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -212,6 +221,7 @@ class HackadelicTOC extends HackadelicTOCContext
 			'text' => $text, 
 			'href0' => "$this->url#$anchor0",
 			'href' => "$this->url#$anchor",
+			'active' => !$this->url,
 			);
 		$anchor = '<a class="toc-anchor" name="'.$anchor.'"></a>';
 		if ($this->BCOMPAT_ANCHORS) $anchor .= '<a class="toc-anchor" name="'.$anchor0.'"></a>';
@@ -241,7 +251,8 @@ class HackadelicTOC extends HackadelicTOCContext
 		$rel = $this->REL_ATTR;
 		foreach ($this->headers as $each) {
 			extract($each);
-			$toc .= "<li class=\"toc-level-$level\"><a rel=\"$rel\" href=\"$href\" title=\"$text\">$text</a></li>";
+			$active = $active ? ' active' : '';
+			$toc .= "<li class=\"toc-level-$level$active\"><a rel=\"$rel\" href=\"$href\" title=\"$text\">$text</a></li>";
 		}
 
 		//--
@@ -267,15 +278,16 @@ class HackadelicTOC extends HackadelicTOCContext
 		$boxID = "$tocID-box";
 
 		if ($class) $class = ' '.$class;
+		if ($this->NOEFFECTS) $class .= ' static-toc-box';
 		if ($style) $style = ' style="'.$style.'"';
 
-		$clickCode = "tocToggle('#$tocID', '#$boxID')";
+		$clickCode = $this->NOEFFECTS ? '' : "tocToggle('#$tocID', '#$boxID')";
 		$titleAttr = $hint ? " title=\"$hint\"" : '';
 
 		$tochdr = '<a class="toc-header" href="javascript:;"'.$titleAttr
 		        . ' onclick="'.$clickCode.'">'.$title.'</a>';
 		$toc = '<div id="'.$boxID.'" class="toc'.$class.'"'.$style.'>'.$tochdr
-		     . '<ul id="'.$tocID.'">'.$toc.'</ul>'
+		     . '<ul id="'.$tocID.'">'.$toc.$this->signature().'</ul>'
 			 . '</div>';
 		return $toc;
 	}
@@ -284,8 +296,6 @@ class HackadelicTOC extends HackadelicTOCContext
 
 	function doEpilogue() {
 ?>
-<?php /* <!-- Hackadelic TOC Boxes <?php echo $this->VERSION ?>, http://hackadelic.com -->  */ ?>
-<span style="display:none">This site uses a <a href="http://hackadelic.com">Hackadelic</a> PlugIn, <a href="http://hackadelic.com/solutions/wordpress/toc-boxes">Hackadelic SEO Table Of Contents <?php echo $this->VERSION ?></a>.</span>
 <script type="text/javascript">
 function tocToggle(toc, box) {
 	var q = jQuery(toc);
@@ -296,6 +306,8 @@ function tocToggle(toc, box) {
 }
 </script>
 <?php
+		$plugin = (object) $this->info;
+		include 'common/xsig.php';
 	}
 
 	//=====================================================================================
@@ -347,6 +359,7 @@ function tocToggle(toc, box) {
 			'MAX_LEVEL', 'REL_ATTR', 'BCOMPAT_ANCHORS',
 			'DEF_TITLE', 'DEF_CLASS', 'DEF_STYLE', 'DEF_HINT', 'DEF_ENHANCE',
 			'AUTO_INSERT', 'AUTO_CLASS', 'AUTO_STYLE',
+			'NOEFFECTS',
 		);
 		$this->op = (object) array();
 		foreach ($opnames as $name)

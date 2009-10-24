@@ -1,9 +1,9 @@
 === Hackadelic SEO Table Of Contents ===
 Contributors: Hackadelic
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1805414
-Tags: content, page, Post, AJAX, shortcode
+Tags: content, page, Post, AJAX, shortcode, toc
 Requires at least: 2.6
-Tested up to: 2.8.1
+Tested up to: 2.8.5
 Stable tag: 1.6.0
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
@@ -13,6 +13,14 @@ Easy to use, freely positionable, fancy AJAX-style table of contents for WordPre
 Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic SEO Table Of Contents") for in-depth information about the plug-in.
 
 == Changelog ==
+
+#### 1.6.1
+
+* TOC box dynamic effects are now optional (and jQuery is not loaded when turned off).
+* TOC entries on the active post page get the extra CSS class 'active'. Useful for TOC's on mutlipage posts.
+* Verified compatibility with WP 2.8.5
+* Added small signature to toc box
+* Several minor fixes and improvements
 
 #### [1.6.0 - Resurrection](http://hackadelic.com/toc-boxes-is-seo-table-of-contents)
 
@@ -83,11 +91,11 @@ Screenshots are boring. See the plug-in live in action at the [plug-in homepage]
 
 This file is part of the *Hackadelic SEO Table Of Contents* WordPress plugin.
 
-*Hackadelic SEO Table Of Contents* is free software: you can redistribute it and/or modify it under the terms of the [GNU Affero General Public License](http://www.fsf.org/licensing/licenses/agpl-3.0.html) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*Hackadelic SEO Table Of Contents* is free software: you can redistribute it and/or modify it under the terms of the [GNU General Public License](http://creativecommons.org/licenses/GPL/2.0/) as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
 
-*Hackadelic SEO Table Of Contents* is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+*Hackadelic SEO Table Of Contents* is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License along with *Hackadelic SEO Table Of Contents*. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with *Hackadelic SEO Table Of Contents*. If not, see <http://www.gnu.org/licenses/>.
 
 == Frequently Asked Questions ==
 

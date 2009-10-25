@@ -1,6 +1,6 @@
 === Hackadelic SEO Table Of Contents ===
 Contributors: Hackadelic
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1805414
+Donate link: http://hackadelic.com/donations
 Tags: content, page, Post, AJAX, shortcode, toc
 Requires at least: 2.6
 Tested up to: 2.8.5

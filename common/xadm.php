@@ -90,7 +90,7 @@ $infomercials = array(
 	</ul>
 	<hr size="0" />
 	<center><small>
-		<!-- License --><?php if (@!$license) $license = 'AGPL'; ?>
+		<!-- License --><?php if (@!$license) $license = 'GPL'; ?>
 		<?php include "license.$license.php" ?>
 		<!-- /License -->
 	</small></center>

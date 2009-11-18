@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic SEO Table Of Contents
-Version: 1.7.1
+Version: 1.7.2
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -31,7 +31,7 @@ class HackadelicTOCContext
 		$s = $this->info['slug'];
 		$t = "Powered by ".$this->info['title']." ".$this->info['version'];
 		$p = "Powered by SEO TOC ".$this->info['version'];
-		return '<div align="center" style="margin-top: 5px; font-size: 7px"><a href="http://hackadelic.com/solutions/wordpress/'.$s.'" title="'.$t.'">'.$p.'</a></div>';
+		return '<div align="center" style="font-size: 7px"><a href="http://hackadelic.com/solutions/wordpress/'.$s.'" title="'.$t.'">'.$p.'</a></div>';
 	}
 
 	// I18N -------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ class HackadelicTOC extends HackadelicTOCContext
 {
 	var $info = array( // Make sure this is equal to the information in the plug-in header!
 		'title' => 'Hackadelic SEO Table Of Contents',
-		'version' => '1.7.0',
+		'version' => '1.7.2',
 		'slug' => 'toc-boxes');
 
 	//-------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ class HackadelicTOC extends HackadelicTOCContext
 		$tochdr = '<a class="toc-header" href="javascript:;"'.$titleAttr
 		        . ' onclick="'.$clickCode.'">'.$title.'</a>';
 		$toc = '<div id="'.$boxID.'" class="toc'.$class.'"'.$style.'>'.$tochdr
-		     . '<ul id="'.$tocID.'">'.$toc.$this->signature().'</ul>'
+		     . '<ul id="'.$tocID.'">'.$toc.'</ul>'.$this->signature()
 			 . '</div>';
 		return $toc;
 	}

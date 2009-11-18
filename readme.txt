@@ -4,7 +4,7 @@ Donate link: http://hackadelic.com/donations
 Tags: content, page, Post, AJAX, shortcode, toc
 Requires at least: 2.6
 Tested up to: 2.8.6
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 

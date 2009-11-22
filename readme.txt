@@ -4,7 +4,7 @@ Donate link: http://hackadelic.com/donations
 Tags: content, page, Post, AJAX, shortcode, toc
 Requires at least: 2.6
 Tested up to: 2.8.6
-Stable tag: 1.7.1
+Stable tag: 1.7.3
 
 Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 
@@ -13,6 +13,10 @@ Easy to use, freely positionable, fancy AJAX-style table of contents for WordPre
 Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic SEO Table Of Contents") for in-depth information about the plug-in.
 
 == Changelog ==
+
+#### 1.7.3
+
+* Workaround for potential issues on some server/PHP/WP configurations (extremely rare)
 
 #### 1.7.2
 

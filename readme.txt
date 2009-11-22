@@ -14,6 +14,10 @@ Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-b
 
 == Changelog ==
 
+#### 1.7.3
+
+* Workaround for potential issues on some server/PHP/WP configurations (extremely rare)
+
 #### 1.7.2
 
 * Fixing a XHTML glitch

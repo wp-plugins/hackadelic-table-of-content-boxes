@@ -1,7 +1,7 @@
 <?php 
 /*
 Plugin Name: Hackadelic SEO Table Of Contents
-Version: 1.7.2
+Version: 1.7.3
 Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
@@ -68,7 +68,7 @@ class HackadelicTOC extends HackadelicTOCContext
 {
 	var $info = array( // Make sure this is equal to the information in the plug-in header!
 		'title' => 'Hackadelic SEO Table Of Contents',
-		'version' => '1.7.2',
+		'version' => '1.7.3',
 		'slug' => 'toc-boxes');
 
 	//-------------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ class HackadelicTOC extends HackadelicTOCContext
 		if ( !is_single() && !is_page() ) return $content;
 
 		$n = $this->MAX_LEVEL;
-		$pattern = '@<h([1-'.$n.'])(\s+.*?)?>(.+?)</h\1>@i';
+		$pattern = '@<h([1-'.$n.'])(\s+.*?)?'.'>\s*(.+?)\s*</h\1>@i';
 		$callback = array(&$this, 'doHeader');
 
 		global $multipage, $numpages, $pages, $page;

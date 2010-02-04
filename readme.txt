@@ -10,7 +10,7 @@ Easy to use, freely positionable, fancy AJAX-style table of contents for WordPre
 
 == Description ==
 
-Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic SEO Table Of Contents") for in-depth information about the plug-in.
+Check out the [plug-in homepage](http://hackadelic.com/solutions/wordpress/seo-table-of-contents "Hackadelic SEO Table Of Contents") for in-depth information about the plug-in.
 
 == Changelog ==
 
@@ -53,7 +53,7 @@ Many thanks to Artem for contributing [the](http://wordpress.org/support/topic/2
 
 #### [1.5.1](http://hackadelic.com/toc-boxes-151-release)
 
-* Fixes a bug with auto-insertion, [reported by DavyB](http://hackadelic.com/solutions/wordpress/toc-boxes#comment-893)
+* Fixes a bug with auto-insertion, [reported by DavyB](http://hackadelic.com/solutions/wordpress/seo-table-of-contents#comment-893)
 * Fixes a bug with TOC's on multi-page entries when the blog does not reside at top-level URL's. [Reported by Aleisha](http://hackadelic.com/toc-boxes-1-5-with-auto-insertion/comment-page-1#comment-841).
 
 #### [1.5.0 "Warp 3" Release](http://hackadelic.com/toc-boxes-1-5-major-release "TOC Boxes 1.5 release announcement")
@@ -65,7 +65,7 @@ Many thanks to Artem for contributing [the](http://wordpress.org/support/topic/2
 * New (pretty) naming scheme for heading anchors. Heading anchor names are derived from a sanitized form of the corresponding heading now, resulting into better readability and better SEO. Thanks to [an idea of johnbillion](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity#comment-656).
 * Several bug fixes and improvements.
 
-**Please check if your CSS styling needs an update, [according to the updated CSS template on the plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#installation"Hackadelic SEO Table Of Contents - Installation").**
+**Please check if your CSS styling needs an update, [according to the updated CSS template on the plug-in homepage](http://hackadelic.com/solutions/wordpress/seo-table-of-contents#installation"Hackadelic SEO Table Of Contents - Installation").**
 
 #### [1.2.1](http://hackadelic.com/toc-boxes-1-2-1-resolves-conflict-with-nofollow-reciprocity)
 
@@ -93,11 +93,11 @@ Initial public release
 1. Upload the whole plugin folder to your /wp-content/plugins/ folder.
 1. Go to the Plugins page and activate the plugin.
 1. Activate the plug-in as usual.
-1. Copy the CSS template fragment from the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes#css-setup "Hackadelic SEO Table Of Contents") to your CSS file (either your themes style.css file, or, which I would recommend, through the [MyCSS plug-in](http://wordpress.org/extend/plugins/ "MyCSS plug-in"), and adjust it to your liking.
+1. Copy the CSS template fragment from the [plug-in homepage](http://hackadelic.com/solutions/wordpress/seo-table-of-contents#css-setup "Hackadelic SEO Table Of Contents") to your CSS file (either your themes style.css file, or, which I would recommend, through the [MyCSS plug-in](http://wordpress.org/extend/plugins/ "MyCSS plug-in"), and adjust it to your liking.
 
 == Screenshots ==
 
-Screenshots are boring. See the plug-in live in action at the [plug-in homepage](http://hackadelic.com/solutions/wordpress/toc-boxes "Hackadelic SEO Table Of Contents"). :-) 
+Screenshots are boring. See the plug-in live in action at the [plug-in homepage](http://hackadelic.com/solutions/wordpress/seo-table-of-contents "Hackadelic SEO Table Of Contents"). :-) 
 
 == License ==
 

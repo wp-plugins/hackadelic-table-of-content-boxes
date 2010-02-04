@@ -2,7 +2,7 @@
 /*
 Plugin Name: Hackadelic SEO Table Of Contents
 Version: 1.7.3
-Plugin URI: http://hackadelic.com/solutions/wordpress/toc-boxes
+Plugin URI: http://hackadelic.com/solutions/wordpress/seo-table-of-contents
 Description: Easy to use, freely positionable, fancy AJAX-style table of contents for WordPress posts and pages.
 Author: Hackadelic
 Author URI: http://hackadelic.com
